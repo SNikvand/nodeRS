@@ -22,7 +22,7 @@ const serverConnect = () => {
     const client = tls.connect(2222,'127.0.0.1', options)
 
     // once TLS handshake is completed let client know - Testing only
-    client.on('secureConnection', () => {
+    client.on('secure', () => {
         stopReconnect()
         console.log('Connected!')
     })

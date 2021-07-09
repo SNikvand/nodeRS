@@ -1,0 +1,24 @@
+{
+  "name": "noders",
+  "version": "1.0.0",
+  "description": "NodeJS Reverse Shell using TLS Sockets with Persistant connection",
+  "main": "server.js",
+  "dependencies": {
+    "chalk": "^4.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SNikvand/nodeRS.git"
+  },
+  "author": "NiceFalcon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SNikvand/nodeRS/issues"
+  },
+  "homepage": "https://github.com/SNikvand/nodeRS#readme"
+}

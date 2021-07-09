@@ -1,3 +1,4 @@
 client-cert/
 server-cert/
 node_modules/
+.DS_Store

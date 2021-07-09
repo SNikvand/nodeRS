@@ -5,7 +5,15 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-
+/**
+ * Purpose: this function handles individual client commands.
+ * "exit" will exit controlling this specific selected client
+ * "msg" will send a basic console.log() message to the client to display
+ * "run" will execute a shell command on client computer
+ * 
+ * @param {*} clients : ref to all connected clients to server
+ * @param {*} client : ref to specific client to execute commands
+ */
 const clientPrompt = (clients, client) => {
     rl.question(`${client.connID}> `, (input) => {
         tokens = input.split(" ")
@@ -27,6 +35,14 @@ const clientPrompt = (clients, client) => {
     })    
 }
 
+/**
+ * Purpose: global prompt which handles cli commands to all clients
+ * "lis" will display all connected clients on the server
+ * "ann" will send an announcement to console.log on all connected clients
+ * "sel" will call clientPrompt() function and select using the unique socket.connID handled in ../server.js
+ * 
+ * @param {*} clients : ref to all connected clients to server
+ */
 const prompt = (clients) => {
     rl.question(`global> `, (input) => {
         tokens = input.split(" ")
@@ -50,6 +66,7 @@ const prompt = (clients) => {
                 }
                 break
             default:
+                // displays on cli the instruction to use the tool
                 console.log(chalk.red('\nPlease use the following syntax:\n') +
                             chalk.green('lis') + '         : list all clients\n' +
                             chalk.green('ann') + chalk.yellow(' <msg>') + '   : announce message to all clients\n' +

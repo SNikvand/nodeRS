@@ -1,4 +1,4 @@
-// Core modules
+// Core modules 
 const tls = require('tls')
 var fs = require('fs')
 var path = require('path');
@@ -6,6 +6,7 @@ var path = require('path');
 // npm modules
 const chalk = require('chalk')
 const express = require('express')
+const hbs = require('hbs')
 
 // custom modules
 const prompt = require('./utils/prompt');
@@ -15,10 +16,14 @@ const { allowedNodeEnvironmentFlags } = require('process');
  * options object stores the private key and public cert to be used by tls socket for traffic encryption.
  * Note: the same key may end up being used for https web portal as well.
  */
-var options = {
+const options = {
     key: fs.readFileSync('server-cert/private-key.pem'),
     cert: fs.readFileSync('server-cert/public-cert.pem')
 }
+
+const publicDirectoryPath = path.join(__dirname, './public')
+const viewsPath = path.join(__dirname, './templates/views')
+const partialsPath = path.join(__dirname, './templates/partials')
 
 // Blank object to store client socket objects. This variable is pass to "prompt.js"
 let clients = {}
@@ -57,15 +62,35 @@ var server = tls.createServer(options, (client) => {
 // Express app
 const app = express()
 
+app.set('view engine', 'hbs')
+app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
+
+app.use(express.static(publicDirectoryPath))
+
 // Default express route that displays all connected clients on the home page
 app.get('', (req, res) => {
-    let clientList = ''
+    let clientList = []
     
     Object.keys(clients).forEach((key) => {
-        clientList += key + '<br>'
+        clientList.push(key)
     })
 
-    res.send(clientList)
+    console.log(clientList)
+    // res.send(clientList)
+    res.render('index', {
+        clientList
+    })
+})
+
+app.get('/client', (req,res) => {
+    res.render('client', {
+        client: req.query.id
+    })
+})
+
+app.get('*', (req,res) => {
+    res.send('404 Not found...')
 })
 
 /**

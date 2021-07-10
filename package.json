@@ -5,12 +5,14 @@
   "main": "server.js",
   "dependencies": {
     "chalk": "^4.1.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "hbs": "^4.1.2",
+    "nodemon": "^2.0.12"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js -e js,hbs"
   },
   "repository": {
     "type": "git",

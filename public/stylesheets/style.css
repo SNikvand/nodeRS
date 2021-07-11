@@ -2,6 +2,10 @@
     min-height: calc(100vh);
 }
 
+pre {
+  white-space: pre-line;
+}
+
 /*
  * Navbar
  */

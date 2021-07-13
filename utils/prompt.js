@@ -26,7 +26,8 @@ const clientPrompt = (clients, client) => {
                 client.write(input.substr(4))
                 break
             case 'run':
-                client.write('0' + input.substr(4))
+                client.write(input.substr(4)+'\n')
+                //client.write('0' + input.substr(4))
                 break
             default:
                 break

@@ -22,11 +22,14 @@ const clientPrompt = (clients, client) => {
             case 'exit':
                 prompt(clients)
                 break
+            case 'rst':
+                client.write('2')
+                break
             case 'msg':
-                client.write(input.substr(4))
+                client.write('1' + input.substr(4) + '\n')
                 break
             case 'run':
-                client.write(input.substr(4)+'\n')
+                client.write('0' + input.substr(4) + '\n')
                 //client.write('0' + input.substr(4))
                 break
             default:

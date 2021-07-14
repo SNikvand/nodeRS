@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
         console.log(`running: ${JSON.stringify(data)}`)
         client = clients[data.clientId]
         if (client) {
-            client.write(data.shellInput+'\n')
+            client.write('0' + data.shellInput+'\n')
             //client.write('0' + data.shellInput.substr(0))
         } else {
             socket.emit('cmdRes', 'Requested client could not be found')

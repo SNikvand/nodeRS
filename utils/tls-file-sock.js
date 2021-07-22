@@ -20,7 +20,7 @@ var fsServer = tls.createServer(options, (client) => {
     client.on('data', (data) => {
         msg = data.toString()
 
-        console.log('fsclient ' + msg.substr(3))
+        // console.log('fsclient ' + msg.substr(3))
         if (msg.substr(0,3) == '_+4') {
             connID = msg.substr(3)
             fsClients[connID] = client

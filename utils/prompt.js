@@ -8,35 +8,40 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-const getFile = (client, localFile, cb) => {
-    try {
-        if (!fs.existsSync(localfile)) {
-            if (cb) {
-                cb()
-            }
+/**
+ * Get file from client and write to file in current directory
+ * @param {socket} client - file socket descriptor
+ * @param {string} destination - UNC path to where file exists on remote client
+ * @param {function} cb - Callback
+ */
+const getFile = (client, destination, cb) => {
+    if (destination) {
+        console.log('destination', destination)
+        let destfs = fs.createWriteStream('./' + destination)
 
-            let localfs = fs.createWriteStream(localFile)
+        client.pipe(destfs)
 
-            localfs.on('open', () => {
-                client.pipe(localfs)
-            })
-
-            client.on('end', () => {
-                console.log('File should be written')
-                client.end('Goodbye\n')
-                client.unpipe(destfs)
-                destfs.close()
-            })
-
-            client.on('error', (err) => {
-                console.log(err)
-            })
+        if (cb) {
+            cb()
         }
-    } catch (e) {
-        console.log(e)
+
+        client.on('end', () => {
+            console.log('File should be written')
+            destfs.close()
+        })
+
+        destfs.on('error', (err) => {
+            console.log(err)
+        })
     }
 }
 
+/**
+ * Function to send a file over socket to client
+ * @param {socket} client - file socket descriptor
+ * @param {string} localFile - UNC path to local file
+ * @param {function} cb - Callback
+ */
 const sendFile = (client, localFile, cb) => {
     console.log(fs.existsSync(localFile))
     try {
@@ -74,8 +79,7 @@ const sendFile = (client, localFile, cb) => {
  * "get <remote_filepath> <local_name>" will find the file on client and send response back to server
  * "send <local_filepath> <remote_name>" will find the file on server and send response to client
  * 
- * @param {*} clients : ref to all connected clients to server
- * @param {*} client : ref to specific client to execute commands
+ * @param {socket} client : ref to specific client to execute commands
  */
 const clientPrompt = (client) => {
     rl.question(`${client.connID}> `, (input) => {
@@ -100,6 +104,11 @@ const clientPrompt = (client) => {
                     client.write('_+3' + tokens[2])
                 })
                 break
+            case 'get':
+                getFile(fsClients[client.connID], tokens[2], () => {
+                    client.write('_+5' + tokens[1])
+                })
+                break
             default:
                 break
         }
@@ -112,8 +121,6 @@ const clientPrompt = (client) => {
  * "lis" will display all connected clients on the server
  * "ann" will send an announcement to console.log on all connected clients
  * "sel" will call clientPrompt() function and select using the unique socket.connID handled in ../server.js
- * 
- * @param {*} clients : ref to all connected clients to server
  */
 const prompt = () => {
     rl.question(`global> `, (input) => {

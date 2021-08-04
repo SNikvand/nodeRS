@@ -11,7 +11,9 @@ let encryptFlag = false
 let decryptFlag = false
 let filePath = ''
 
-const encrypt = (input, output) => {
+const encrypt = (fileToEncrypt) => {
+    let inputStream = fs.createReadStream(fileToEncrypt)
+    let encStream = fs.createWriteStream(fileToEncrypt + '.enc')
    
     // Create initialization Vector
     const iv = crypto.randomBytes(16)
@@ -21,14 +23,22 @@ const encrypt = (input, output) => {
 
     // Create new encrypted buffer
     // const result = Buffer.concat([iv, cipher.update(buffer), cipher.final()])
-    output.write(iv)
-    pipeline(input, cipher, output, (err) => {
+    encStream.write(iv)
+    pipeline(inputStream, cipher, encStream, (err) => {
         if (err) throw err;
+    })
+
+    inputStream.on('close', () => {
+        fs.unlink(fileToEncrypt, (err => {
+            if (err) console.log(err)
+            else {
+                console.log('deleted file ... ' + fileToEncrypt)
+            }
+        }))
     })
 }
 
 const decrypt = (inputPath, outputPath) => {
-
     const readiv = fs.createReadStream(inputPath, {end: 15})
 
     let iv
@@ -44,37 +54,37 @@ const decrypt = (inputPath, outputPath) => {
         pipeline(readStream, decipher, writeStream, (err) => {
             if (err) throw err;
         })
+
+        readStream.on('close', () => {
+            fs.unlink(inputPath, (err => {
+                if (err) console.log(err)
+                else {
+                    console.log('deleted file ... ' + inputPath)
+                }
+            }))
+        })
     })
 }
 
 const cryptoDir = (directory, stack) => {
     fs.readdirSync(directory, { withFileTypes: true }).forEach(file => {
+        targetFile = directory + file.name
 
         if (file.isDirectory()) {
             try {
-                listDir(directory + file.name + '\\', stack)
+                listDir(targetFile + '\\', stack)
             } catch (e) { }
         } else if (file.isFile()) {
-
+        
             if(encryptFlag) {
-                let plainFile = fs.createReadStream(directory + file.name)
-                let encFile = fs.createWriteStream(directory + file.name + '.enc')
-                encrypt(plainFile, encFile)
+                encrypt(targetFile)
                 console.log(`encrypting ... ${directory}${file.name}`)
-                fs.unlink(directory + file.name, (err => {
-                    if (err) console.log(err)
-                    else {
-                        console.log('deleted file: ' + directory + file.name)
-                    }
-                }))
             }            
             
             if(decryptFlag) {
                 if (path.extname(file.name) == ".enc") {
-                    DecFilePath = directory + file.name
-                    EncFilePath = directory + file.name
-                    decrypt(EncFilePath, DecFilePath.substr(0, DecFilePath.length - 4))
-                    console.log('Decrypting File' + EncFilePath)
+                    decrypt(targetFile, targetFile.substr(0, targetFile.length - 4))
+                    console.log('Decrypting File ... ' + targetFile)
                 }
             }            
         }
@@ -83,8 +93,8 @@ const cryptoDir = (directory, stack) => {
 
 const helpMsg = () => {
     console.log('\nFLAGS' + '\n' +
-                '  -e "/path/to/some folder" = Encrypt all files recursively within folder' + '\n' + 
-                '  -d "/path/to/some folder" = Decrypt all files recursively within folder' + '\n' +
+                '  -e "/path/to/some folder/" = Encrypt all files recursively within folder' + '\n' + 
+                '  -d "/path/to/some folder/" = Decrypt all files recursively within folder' + '\n' +
                 '  -p "encryption passphrase" = Passphrase. Do not lose this as you will not be able to decrypt without it' + '\n\n' +
                 'INFO' + '\n' +
                 '  encrypt and decrypt flags cannot be used together.' + '\n' +
@@ -119,7 +129,6 @@ const validate = () => {
     }
 
     if ((encryptFlag && decryptFlag) || (!encryptFlag && !decryptFlag) || key == '') {
-        helpMsg()
         return false
     } else {
         return true
@@ -128,11 +137,7 @@ const validate = () => {
 
 const __MAIN__ = () => {
     if(validate()) {
-        console.log('do something')
+        cryptoDir(filePath)
     }
 }
 __MAIN__()
-
-//\\testfiles\\
-//\\node_modules\\
-//listDir('.\\testfiles\\')

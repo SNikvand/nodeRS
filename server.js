@@ -4,22 +4,31 @@ const { fsServer, fsClients } = require('./utils/tls-file-sock')
 const { httpServer } = require('./utils/sockio-web')
 const prompt = require('./utils/prompt');
 
+// Global Constants
+const _comPort = 2222
+const _fsPort = 2223
+const _webPort = 3000
+// ===================
+
 /**
  * listen to incoming tls socket connections and pass by reference to utils/prompt function
  */
-server.listen(2222, () => {
-    console.log('C&C Socket is live on port 2222')
+server.listen(_comPort, () => {
+    console.log(`C&C Socket is live on port ${_comPort}`)
 
     // CLI functionality. May depricate soon
     prompt()
 })
 
-fsServer.listen(2223, () => {
-    console.log('FS Socket is live on port 2223')
+/**
+ * Listen to incoming socket connection on port _fsPort
+ */
+fsServer.listen(_fsPort, () => {
+    console.log(`FS Socket is live on port ${_fsPort}`)
 })
 /**
- * listen to http server on port 3000
+ * listen to http server on port _webPort
  */
-httpServer.listen(3000, () => {
-    console.log('Webserver is live on port 3000')
+httpServer.listen(_webPort, () => {
+    console.log(`Webserver is live on port ${_webPort}`)
 })

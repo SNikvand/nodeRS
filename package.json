@@ -13,7 +13,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js -e js,hbs"
+    "dev": "nodemon server.js -e js,hbs",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

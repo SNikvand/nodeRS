@@ -9,8 +9,8 @@ const { cpuUsage } = require('process');
  * options object stores the private key and public cert to be used by tls socket for traffic encryption.
  */
 const _options = {
-    key: fs.readFileSync('/root/certs/private-key.pem'),
-    cert: fs.readFileSync('/root/certs/public-cert.pem'),
+    key: fs.readFileSync('/root/certs/private.key'),
+    cert: fs.readFileSync('/root/certs/public.cert'),
     rejectUnauthorized: false
 }
 

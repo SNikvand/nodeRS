@@ -1,16 +1,16 @@
       </SharedFolders>
       <Clipboard/>
       <GuestProperties>
-        <GuestProperty name="/VirtualBox/HostInfo/GUI/LanguageID" value="en_US" timestamp="1621738936793028100" flags=""/>
+        <GuestProperty name="/VirtualBox/HostInfo/GUI/LanguageID" value="en_US" timestamp="1628121834323601800" flags="RDONLYGUEST"/>
       </GuestProperties>
-      <StorageControllers>
-        <StorageController name="IDE" type="PIIX4" PortCount="2" useHostIOCache="true" Bootable="true"/>
-        <StorageController name="SATA" type="AHCI" PortCount="1" useHostIOCache="false" Bootable="true" IDE0MasterEmulationPort="0" IDE0SlaveEmulationPort="1" IDE1MasterEmulationPort="2" IDE1SlaveEmulationPort="3">
-          <AttachedDevice type="HardDisk" hotpluggable="false" port="0" device="0">
-            <Image uuid="{1a5703d5-1305-4f4d-bd95-1754a39fb592}"/>
-          </AttachedDevice>
-        </StorageController>
-      </StorageControllers>
     </Hardware>
+    <StorageControllers>
+      <StorageController name="IDE" type="PIIX4" PortCount="2" useHostIOCache="true" Bootable="true">
+        <AttachedDevice type="HardDisk" hotpluggable="false" port="0" device="0">
+          <Image uuid="{f47bf5f6-e4f1-455a-a348-9543b7e23c1a}"/>
+        </AttachedDevice>
+        <AttachedDevice passthrough="false" type="DVD" hotpluggable="false" port="1" device="0"/>
+      </StorageController>
+    </StorageControllers>
   </Machine>
 </VirtualBox>

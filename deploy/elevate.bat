@@ -5,7 +5,7 @@
 ::::::::::::::::::::::::::::::::::::::::::::
  @echo off
  CLS
-
+if not "%1" == "min" start /MIN cmd /c %0 min & exit/b >nul 2>&1
 :init
  setlocal DisableDelayedExpansion
  set cmdInvoke=1

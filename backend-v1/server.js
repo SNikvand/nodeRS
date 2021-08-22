@@ -16,7 +16,6 @@ const _webPort = 3000
 server.listen(_comPort, () => {
     console.log(`C&C Socket is live on port ${_comPort}`)
 
-    // CLI functionality. May depricate soon
     prompt()
 })
 

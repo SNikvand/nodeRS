@@ -1,4 +1,4 @@
-client-cert/
-server-cert/
-node_modules/
+client-side/client-cert/
+backend-v1/server-cert/
+backend-v1/node_modules/
 .DS_Store

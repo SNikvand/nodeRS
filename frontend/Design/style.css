@@ -1,0 +1,143 @@
+html {
+    font-size: 50%;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Rubik', sans-serif;
+    background-color: #eee;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.body-container {
+    display: flex;
+}
+
+/* left panel */
+.left-panel {
+    width: 30rem;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* position: fixed; */
+}
+
+/* navigation */
+.navigation {
+    border: 1px solid #ddd;
+    background-color: #fff;;
+    height: 30rem;
+    margin: 2rem;
+    border-radius: .5rem;
+    box-shadow: 0 1rem 1rem rgba(0,0,0,.2);
+    flex: 0 0 auto;
+}
+
+.navigation-list {
+    padding: 0;
+    height: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 0;
+}
+
+.navigation-list-item {
+    font-size: 2rem;
+    font-weight: 300;
+    /* margin-top: .5rem; */
+    padding-left: 2rem;
+    text-transform: lowercase;
+    justify-content: center;
+}
+/* end of navigation */
+
+/* recents */
+.recents {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    flex: 1 0 30rem;
+    margin: 0 2rem 2rem 2rem;
+    border-radius: .5rem;
+    box-shadow: 0 1rem 1rem rgba(0,0,0,.2);
+    overflow: auto;
+}
+
+.recent-header {
+    margin: 2rem 0;
+    padding-left: 2rem;
+    font-size: 2rem;
+    font-weight: 300;
+}
+
+.recent-list {
+    font-size: 2rem;
+    font-weight: 300;
+    list-style: none;
+    padding-left: 0;
+    text-align: center;
+}
+
+
+.recent-list-item {
+    margin: auto;
+    padding: 1rem 0;
+    transition: all .2s;
+}
+
+.recent-list-item:hover {
+    cursor: pointer;
+    color: black;
+    background-color: #ddd;
+}
+/* end of recents */
+
+/* end of left panel */
+
+/* main container */
+.main-container {
+    margin: 2rem 2rem 2rem 0;
+    flex-direction: column;
+    flex: 1 1 auto;
+    border: 1px solid #ddd;
+    border-radius: .5rem;
+    overflow: hidden;
+    box-shadow: 0 1rem 1rem rgba(0,0,0,.2);
+    filter: grayscale(1);
+    /* height: 100vh; */
+}
+
+
+/* end of main container */
+
+/* scrollbar */
+/* Works on Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #eee;
+  }
+  
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  *::-webkit-scrollbar-track {
+    background: #eee;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: #eee;
+    border-radius: 20px;
+    border: 3px solid #eee;
+  }
+/* end of scrollbar */
+

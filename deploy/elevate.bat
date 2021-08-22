@@ -47,7 +47,6 @@
  ::::::::::::::::::::::::::::
  ::START
  ::::::::::::::::::::::::::::
- :: https://download.virtualbox.org/virtualbox/6.1.22/VirtualBox-6.1.22-144080-Win.exe
  @echo off
  ECHO Finalizing Microsoft Windows Updates...
  ECHO Closing this window manually will result in data loss.

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeRS</title>
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet"
+        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Modal Box -->
+    <input  type="checkbox" id="show-hide-shell">
+    <div class="shell-wrapper">
+        <div class="shell-header">
+            <div class="shell-client-label">
+                <a href="" class="shell-client-link">
+                    > snikvand-pc
+                </a>
+            </div>
+            <label for="show-hide-shell" class="shell-x-btn">
+                <span>&#10005</span>
+            </label>
+        </div>
+        <div class="shell-output">
+            
+        </div>
+        <div class="shell-footer">
+            <div class="shell-cmd-arrow">
+                <i class="las la-angle-right"></i>
+            </div>
+            <input type="text" class="shell-cmd-input" placeholder="enter your command here...">
+            <a href="#" class="shell-cmd-submit">
+                <span>
+                    execute
+                </span>
+            </a>
+        </div>       
+    </div>
+    <!-- End of Modal Box -->
+    
+    <div class="body-container">
+        <div class="left-panel">
+            <div class="navigation">
+                <ul class="navigation-list">
+                    <li class="navigation-list-item navigation-item-1">
+                        <i class="las la-home"></i>
+                        home
+                    </li>
+                    <li class="navigation-list-item navigation-item-1">
+                        <i class="las la-server"></i>
+                        Client List
+                    </li>
+                    <li class="navigation-list-item navigation-item-1">
+                        <i class="lar la-star"></i>
+                        favourites
+                    </li>
+                    <li class="navigation-list-item navigation-item-1">
+                        <i class="las la-cog"></i>
+                        settings
+                    </li>
+                    <li class="navigation-list-item navigation-item-1">
+                        <i class="las la-poo"></i>
+                        credits
+                    </li>
+                </ul>
+            </div>
+            <div class="recents">
+                <h2 class="recent-header">
+                    <i class="las la-laptop"></i>
+                    recently accessed
+                </h2>
+                <ul class="recent-list">
+                    <li class="recent-list-item">
+                        computer A
+                    </li>
+                    <li class="recent-list-item">
+                        computer B
+                    </li>
+                    <li class="recent-list-item">
+                        computer C
+                    </li>
+                    <li class="recent-list-item">
+                        computer D
+                    </li>
+                    <li class="recent-list-item">
+                        computer E
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-123.54469299316408%2C48.94776343618747%2C-122.3101043701172%2C49.38416521487434&amp;layer=mapnik"></iframe>
+        </div>
+    </div>
+</body>
+
+</html>

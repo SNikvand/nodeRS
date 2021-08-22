@@ -1,0 +1,129 @@
+/* Shell Modal */
+.shell-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+    height: 600px;
+    width: 800px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    opacity: .9;
+    border: 1px solid #bbb;
+    border-radius: .5rem;
+    overflow: hidden;
+    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .2);
+    display: none;
+
+}
+
+.shell-header {
+    display: flex;
+    flex: 0 0 4rem;
+}
+
+.shell-client-label {
+    background-color: #777;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.shell-client-link {
+    text-decoration: none;
+    color: #fff;
+    padding-left: 1rem;
+    font-size: 3rem;
+    display: inline-block;
+    width: max-content;
+}
+
+.shell-x-btn {
+    cursor: pointer;
+    background-color: #111;
+    color: #fff;
+    width: 4rem;
+    text-align: center;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.shell-output {
+    flex: 1 1 auto;
+    background-color: #eee;
+    color: #333;
+    font-size: 2rem;
+    font-family: monospace;
+    padding: 1rem;
+    overflow-y: scroll;
+}
+
+.shell-footer {
+    flex: 0 0 4rem;
+    display: flex;
+    background-color: #777;
+    /* overflow-y: scroll; */
+}
+
+.shell-cmd-arrow {
+    flex: 0 0 3.5rem;
+    font-size: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #aaa;
+}
+
+.shell-cmd-input {
+    flex: 1 1 auto;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    color: #fff;
+    padding: 0 1rem;
+}
+
+.shell-cmd-input:focus {
+    background-color: #fff;
+    color: #000;
+}
+
+.shell-cmd-submit {
+    flex: 0 0 8rem;
+    font-size: 2rem;
+    text-decoration: none;
+    text-transform: lowercase;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+}
+
+#show-hide-shell {
+    display: none;
+}
+
+#show-hide-shell:checked ~ .shell-wrapper {
+    display: flex;
+    animation: modal-anim .4s;
+}
+
+@keyframes modal-anim {
+    0% {
+        top: 40%;
+        opacity: 0;
+    }
+    100% {
+        top: 50%;
+        opacity: .9;
+    }
+}
+/* end of Shell Modal */

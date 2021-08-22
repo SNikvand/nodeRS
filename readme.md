@@ -4,7 +4,7 @@ This is intended as a basic guide to use NodeRS
 ## Database Structure
 
 ### Users
-```json
+```
 {
     id,
     username,

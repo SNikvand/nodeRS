@@ -13,7 +13,7 @@ This is intended as a basic guide to use NodeRS
 }
 ```
 ### Workstations
-```json
+```
 {
     database_id,
     workstation_id,
@@ -30,7 +30,7 @@ This is intended as a basic guide to use NodeRS
 ## Communication Structure
 ### Socket communication between web and server (socket.io)
 #### From web to server
-```json
+```
 {
     webuser_sockid, // Socket ID of the admin on the web portal
     targetclient_id, // Client ID (not socket id) of the target workstation
@@ -47,7 +47,7 @@ This is intended as a basic guide to use NodeRS
 ```
 
 ### Socket communication between server and client (net socket)
-```json
+```
 {
     command_type, // Type of command, i.e. file transfer, sessions reset, exec...
     command // Command itself (can be null), i.e. 'pwd' or 'cd /var/usr'
@@ -57,3 +57,4 @@ This is intended as a basic guide to use NodeRS
 # Random Notes
 Generating SSL key pair
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt
+![color-pallet](https://user-images.githubusercontent.com/5490465/130366793-7ab4e05b-e3db-491b-85a8-164457079e80.png)

@@ -1,0 +1,21 @@
+{
+  "name": "noders-v2",
+  "version": "1.0.0",
+  "description": "second revision of NodeRS",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon node app.js -e js,hbs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shahin Nikvand",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "hbs": "^4.1.2",
+    "mongoose": "^5.13.7",
+    "nanoid": "^3.1.25",
+    "socket.io": "^4.1.3"
+  },
+  "_id": "noders-v2@1.0.0"
+}

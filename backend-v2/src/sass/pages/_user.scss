@@ -1,0 +1,64 @@
+.user-container-wrapper {
+    display: flex;
+}
+
+.user-container {
+    flex: 1 1 50%;
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0 1rem 1rem;
+    background-color: $c-white;
+    border: 1px solid $color-background;
+    box-shadow: 0 1rem 1rem rgba(0,0,0,.1);
+}
+
+.user-container-last {
+    margin: 1rem;
+}
+
+.user-container-header {
+    flex: 0 0 4rem;
+    border-bottom: 1px solid #3c6e71;
+    display: flex;
+    padding: 1rem;
+}
+
+.user-container-header-label {
+    color: #284b63;
+    font-size: 3rem;
+    font-family: 'Rubik', sans-serif;
+}
+
+.btn-margin-right {
+    margin-right: 1rem;
+}
+
+.user-container-data {
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.user-container-table {
+    flex: 0 1 800px;
+    font-size: 1.5rem;
+    text-align: left;
+    border-spacing: 2rem;
+}
+
+.form-add-user {
+    margin: 2rem;
+    flex: 0 1 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.form-add-user-text-container {
+    width: 30rem;
+    height: 5rem;
+    font-size: 2rem;
+    position: relative;
+}
+
+

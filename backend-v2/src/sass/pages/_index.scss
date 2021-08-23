@@ -1,0 +1,72 @@
+.shell-output {
+    flex: 1 1 auto;
+    color: $color-text;
+    font-size: 2rem;
+    font-family: $font-monospace;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.shell-footer {
+    flex: 0 0 4rem;
+    background-color: $color-text;
+}
+
+.shell-cmd-arrow {
+    flex: 0 0 2rem;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: $c-white;
+}
+
+.shell-cmd-input {
+    flex: 1 1 auto;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    color: $c-white;
+    padding: 0 1rem;
+}
+
+.shell-cmd-input:focus {
+    background-color: $color-container;
+    color: $color-text;
+    border-top: 1px solid $color-text;
+    border-bottom: 1px solid $color-text;
+}
+
+.shell-cmd-submit {
+    flex: 0 0 8rem;
+    font-size: 2rem;
+    text-decoration: none;
+    text-transform: lowercase;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: $color-text;
+    color: $c-white;
+    text-align: center;
+}
+
+#show-hide-shell {
+    display: none;
+}
+
+#show-hide-shell:checked ~ .shell-wrapper {
+    display: flex;
+    animation: modal-anim .4s;
+}
+
+@keyframes modal-anim {
+    0% {
+        top: 40%;
+        opacity: 0;
+    }
+    100% {
+        top: 50%;
+        opacity: .9;
+    }
+}

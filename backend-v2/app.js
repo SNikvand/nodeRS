@@ -1,6 +1,6 @@
 // Custom Modules
-const { httpsServer } = require('./utils/web-server')
-require('./utils/socketio-listener') // Required to run socketio events
+const { httpsServer } = require('./src/utils/web-server')
+require('./src/utils/socketio-listener') // Required to run socketio events
 // End of custom modules
 
 const _HTTPS_PORT_ = 8443

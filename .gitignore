@@ -1,6 +1,6 @@
 client-side/client-cert/
 backend-v1/server-cert/
 backend-v1/node_modules/
-backend-v2/server-cert/
+backend-v2/certs/
 backend-v2/node_modules/
 .DS_Store

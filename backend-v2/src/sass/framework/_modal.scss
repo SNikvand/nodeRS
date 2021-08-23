@@ -1,0 +1,63 @@
+// Modal
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+    height: 600px;
+    width: 800px;
+    background-color: $color-container;
+    display: flex;
+    flex-direction: column;
+    opacity: .9;
+    overflow: hidden;
+    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .2);
+    display: none;
+}
+
+.modal-item-flex {
+    display: flex;
+}
+
+.modal-header {
+    flex: 0 0 4rem;
+}
+
+.modal-header-label-wrapper {
+    background-color: $color-text;
+    color: $c-white;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal-header-label {
+    color: $c-white;
+    padding-left: 1rem;
+    text-decoration: none;
+    font-size: 2rem;
+}
+
+.modal-header-x {
+    cursor: pointer;
+    background-color: $color-text;
+    color: $c-white;
+    width: 4rem;
+    text-align: center;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal-body {
+    flex: 1 1 auto;
+    background-color: $color-container;
+    color: $color-text;
+    font-size: 2rem;
+    padding: 1rem;
+}
+// End of Modal

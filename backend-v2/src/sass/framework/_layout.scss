@@ -1,0 +1,47 @@
+html {
+    font-size: 50%;
+}
+
+body {
+    font-family: $font-primary;
+    background-color: $color-background;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.body-container {
+    display: flex;
+}
+
+.main-container {
+    flex-direction: column;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+/* scrollbar */
+/* Works on Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #eee;
+  }
+  
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  *::-webkit-scrollbar-track {
+    background: #eee;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: #eee;
+    border-radius: 20px;
+    border: 3px solid #eee;
+  }
+/* end of scrollbar */

@@ -8,8 +8,6 @@
     <title>NodeRS</title>
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/login.css">
-    <link rel="stylesheet" href="css/modal.css">
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,33 +23,7 @@
 <body>
 
     <!-- Modal Box -->
-    <input type="checkbox" id="show-hide-shell">
-    <div class="shell-wrapper">
-        <div class="shell-header">
-            <div class="shell-client-label">
-                <a href="" class="shell-client-link">
-                    > snikvand-pc
-                </a>
-            </div>
-            <label for="show-hide-shell" class="shell-x-btn">
-                <span>&#10005</span>
-            </label>
-        </div>
-        <div class="shell-output">
-
-        </div>
-        <div class="shell-footer">
-            <div class="shell-cmd-arrow">
-                <i class="las la-angle-right"></i>
-            </div>
-            <input type="text" class="shell-cmd-input" placeholder="enter your command here...">
-            <a href="#" class="shell-cmd-submit">
-                <span>
-                    execute
-                </span>
-            </a>
-        </div>
-    </div>
+    {{>modal_shell}}
     <!-- End of Modal Box -->
 
     <div class="body-container">

@@ -11,8 +11,8 @@ const socketio = require('socket.io')
 // End of npm modules
 
 // certificate options
-var key = fs.readFileSync(__dirname + '/../server-cert/host.key')
-var cert = fs.readFileSync(__dirname + '/../server-cert/host.cert')
+var key = fs.readFileSync(__dirname + '/../../certs/host.key')
+var cert = fs.readFileSync(__dirname + '/../../certs/host.crt')
 var options = {
     key,
     cert
@@ -20,7 +20,7 @@ var options = {
 // end of cert options
 
 // static paths
-const publicDirectoryPath = path.join(__dirname, '../public')
+const publicDirectoryPath = path.join(__dirname, '../../public')
 const viewsPath = path.join(__dirname, '../templates/views')
 const partialsPath = path.join(__dirname, '../templates/partials')
 // end of static paths

@@ -1,0 +1,52 @@
+@mixin button-bg($bg) {
+  background: $bg;
+  &:hover {
+    background:darken($bg,8%);
+    transition: all 0.3s ease;
+  }
+  &:active {
+    background:darken($bg,25%);
+  } 
+}
+
+.btn {
+ color: $c-white;
+ text-decoration:none;
+ padding:5px 10px;
+ border-radius: $radius;
+ font-family: $font-primary;
+ font-size: 2rem;
+ text-transform: uppercase;
+}
+
+.btn-green {
+   @include button-bg(#2ecc71);
+}
+
+.btn-blue {
+   @include button-bg(#3498db);
+}
+
+.btn-yellow{
+   @include button-bg(#f1c40f);
+}
+
+.btn-red {
+   @include button-bg(#e74c3c);
+}
+
+.btn-primary {
+   @include button-bg($color-primary);
+}
+
+.btn-secondary {
+   @include button-bg($color-secondary);
+}
+
+.btn-lg-padding {
+    padding:10px 20px;
+}
+
+.btn-wrapper {
+    padding: 2rem 0 1rem 0;
+}

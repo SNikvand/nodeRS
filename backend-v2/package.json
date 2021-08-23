@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon node app.js -e js,hbs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sass": "sass --watch src/sass/global.scss:public/css/style.css"
   },
   "author": "Shahin Nikvand",
   "license": "ISC",

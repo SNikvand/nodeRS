@@ -12,45 +12,17 @@
                         <th>Username</th>
                         <th>Action</th>
                     </tr>
-                    <tr>
-                        <td>SNikvand</td>
+                    {{#each users}}
+                    <tr id="{{_id}}">
+                        <td>{{username}}</td>
                         <td>
-                            <a href="#" class="btn-margin-right btn btn-green">
-                                <i class="las la-plus-circle"></i>
-                                Reset Password
-                            </a>
-                            <a href="#" class="btn-margin-right btn btn-red">
+                            <a href="javascript:deleteProfile('{{_id}}')" class="btn-margin-right btn btn-red">
                                 <i class="las la-minus-circle"></i>
                                 Delete
                             </a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>SNikvand</td>
-                        <td>
-                            <a href="#" class="btn-margin-right btn btn-green">
-                                <i class="las la-plus-circle"></i>
-                                Reset Password
-                            </a>
-                            <a href="#" class="btn-margin-right btn btn-red">
-                                <i class="las la-minus-circle"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>SNikvand</td>
-                        <td>
-                            <a href="#" class="btn-margin-right btn btn-green">
-                                <i class="las la-plus-circle"></i>
-                                Reset Password
-                            </a>
-                            <a href="#" class="btn-margin-right btn btn btn-red">
-                                <i class="las la-minus-circle"></i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
+                    {{/each}}
                 </table>
             </div>
         </div>
@@ -61,19 +33,20 @@
                 </div>
             </div>
             <div class="user-container-data">
-                <form action="" class="form-add-user">
+                <form action="/users" method="POST" class="form-add-user" id="form-add-user">
                     <div class="form-add-user-text-container">
                         <input type="text" class="textfield" name="username" id="username" placeholder="username">
                     </div>
                     <div class="form-add-user-text-container">
-                        <input type="password" class="textfield" name="password1" id="password1" placeholder="password">
+                        <input type="password" class="textfield" name="password" id="password" placeholder="password">
                     </div>
                     <div class="form-add-user-text-container">
                         <input type="password" class="textfield" name="password2" id="password2" placeholder="password confirmation">
                     </div>
                     <div class="btn-wrapper">
-                        <a href="#" class="btn btn-green">submit</a>
+                        <a href="javascript:{}" onclick="document.getElementById('form-add-user').submit();" class="btn btn-green">submit</a>
                     </div>
+                    <input type="submit" hidden />
                 </form>
             </div>
         </div>

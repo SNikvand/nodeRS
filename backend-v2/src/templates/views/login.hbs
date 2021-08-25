@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>NodeRS</title>
         <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="/css/style.css">
         <link rel="stylesheet"
             href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
     
     <div class="login-container">
         
-        <form action="#" class="login-form">
+        <form action="/users/login" method="POST" class="login-form" id="login-form">
 
             <div class="login-label">
                 <h2 class="login-header">
@@ -28,23 +28,22 @@
             </div>
 
             <div class="login-form-username-container">
-                <input type="text" class="textfield" placeholder="username">
+                <input type="text" class="textfield" placeholder="username" name="username">
                 <i class="lar la-user login-form-username-icon"></i>
             </div>
 
             <div class="login-form-password-container">
-                <input type="text" class="textfield" placeholder="password">
+                <input type="password" class="textfield" placeholder="password" name="password">
                 <i class="las la-key login-form-password-icon"></i>
             </div>
             <div class="login-form-btn-container">
-                <a href="#" class="btn btn-primary btn-lg-padding"> 
+                <a href="javascript:{}" onclick="document.getElementById('login-form').submit();" class="btn btn-primary btn-lg-padding"> 
                     <span>
                         Login
                     </span>
                 </a>
-                <!-- <input type="submit" value="Login" class="login-submit-btn"> -->
             </div>
-
+            <input type="submit" hidden />
         </form>
 
         <div class="login-right-image-container">

@@ -1,6 +1,7 @@
 // Custom Modules
 const { httpsServer } = require('./src/utils/web-server')
 require('./src/utils/socketio-listener') // Required to run socketio events
+require('./src/utils/db/mongoose') // Required to connect to database
 // End of custom modules
 
 const _HTTPS_PORT_ = 8443

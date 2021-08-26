@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
         trim: true
     },
     favourites: [{
-        workstationID: {
+        workstationId: {
             type: String
         }
     }],
@@ -29,7 +29,9 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token = jwt.sign({ _id: user._id.toString() }, 'nodersSecretToken')
+    const token = jwt.sign({ _id: user._id.toString() }, 'nodersSecretToken', {
+        expiresIn: '7d'
+    })
 
     user.tokens = user.tokens.concat({ token })
     await user.save()

@@ -14,6 +14,7 @@ router.get('/users', auth, async (req, res) => {
 
 // SAVE A NEW USER AND REDIRECT TO '/users' GET
 router.post('/users', auth, async (req, res) => {
+    
     const user = new User(req.body)
     try {
         await user.save()

@@ -52,7 +52,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 999;
   box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.4);
 }
 
@@ -226,7 +226,6 @@ body {
   width: 70rem;
   height: 60rem;
   background-color: #fff;
-  border: 1px solid #d9d9d9;
   border-radius: 0.5rem;
   box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.2);
   margin: 0 auto;
@@ -334,6 +333,10 @@ body {
   font-family: monospace;
   padding: 1rem;
   overflow-y: auto;
+}
+
+.shell-meta-text {
+  color: #3c6e61;
 }
 
 .shell-footer {

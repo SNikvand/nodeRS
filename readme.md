@@ -39,7 +39,7 @@ This is intended as a basic guide to use NodeRS
 }
 ```
 #### from server back to web (socket.io)
-```json
+```
 {
     command_type, // type of command, i.e. new node connected, populate something on page
     result // additional data or display output to write

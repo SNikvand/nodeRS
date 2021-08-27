@@ -1,16 +1,9 @@
 const express = require('express')
-const router = new express.Router
+const {auth} = require('../middleware/auth')
+const router = new express.Router()
 
-router.get('/', (req, res) => {
-    res.render('index')
-})
-
-router.get('/login', (req, res) => {
-    res.render('login')
-})
-
-router.get('/users', (req, res) => {
-    res.render('users')
+router.get('/', auth, (req, res) => {
+    res.render('index', )
 })
 
 module.exports = router

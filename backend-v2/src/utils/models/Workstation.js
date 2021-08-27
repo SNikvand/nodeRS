@@ -1,23 +1,35 @@
 const mongoose = require('mongoose')
+const { nanoid } = require('nanoid')
 
-const Workstation = mongoose.model('Workstation', {
-    workstation_id: {
+const workstationSchema = new mongoose.Schema({
+    workstationId: {
         type: String,
-        default: () => nanoid(10)
+        unique: true,
+        required: true
     },
-    last_ip: {
+    lastIp: {
         type: String
     },
     location: {
-        type: [Number]
+        latitude: {
+            type: Number
+        },
+        longitude: {
+            type: Number
+        }
     },
-    pretty_name: {
+    prettyName: {
         type: String
     },
-    encryption_key: {
+    encryptionKey: {
         type: String,
         default: () => nanoid(16)
+    },
+    alive: {
+        type: Boolean
     }
 })
+
+const Workstation = mongoose.model('Workstation', workstationSchema)
 
 module.exports = Workstation

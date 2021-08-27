@@ -1,23 +1,23 @@
-<input type="checkbox" id="show-hide-shell">
+<input type="checkbox" id="show-hide-shell" >
 <div class="modal shell-wrapper">
     <div class="modal-header modal-item-flex">
         <div class="modal-header-label-wrapper">
-            <a href="" class="modal-header-label">
+            <a href="" class="modal-header-label" id="shell-modal-header-label">
                 > snikvand-pc
             </a>
         </div>
-        <label for="show-hide-shell" class="modal-header-x">
+        <a href="javascript:{}" onclick="" class="modal-header-x" id="shell-modal-exit">
             <span>&#10005</span>
-        </label>
+        </a>
     </div>
-    <div class="shell-output modal-body">
+    <div class="shell-output modal-body" id="shell-output">
         
     </div>
     <div class="shell-footer modal-item-flex">
         <div class="shell-cmd-arrow">
             <i class="las la-angle-right"></i>
         </div>
-        <input type="text" class="shell-cmd-input" placeholder="enter your command here...">
+        <input type="text" class="shell-cmd-input" placeholder="enter your command here..." id="shell-cmd-input">
         <a href="#" class="shell-cmd-submit">
             <span>
                 execute

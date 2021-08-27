@@ -1,4 +1,4 @@
-client-side/client-cert/
+client-side/certs/
 backend-v1/server-cert/
 backend-v1/node_modules/
 backend-v2/certs/

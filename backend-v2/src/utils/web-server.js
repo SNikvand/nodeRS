@@ -8,6 +8,7 @@ const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
 const socketio = require('socket.io')
+const cookieParser = require('cookie-parser')
 // End of npm modules
 
 // certificate options
@@ -27,12 +28,16 @@ const partialsPath = path.join(__dirname, '../templates/partials')
 
 // Express Routes
 const mainRouter = require('./routes/main-router')
+const userRouter = require('./routes/user-router')
+const workstationRouter = require('./routes/workstation-router')
 // End of Express Routes
 
 // Express and Socket.io setup
 const app = express()
 const httpsServer = https.createServer(options, app)
 const io = socketio(httpsServer)
+app.use(express.urlencoded({extended: true}))
+// app.use(express.json())
 // End of setup
 
 // Setup HBS + Paths
@@ -43,6 +48,9 @@ hbs.registerPartials(partialsPath)
 
 // Setup Express to use public static path
 app.use(express.static(publicDirectoryPath))
+app.use(cookieParser())
+app.use(workstationRouter)
+app.use(userRouter)
 app.use(mainRouter)
 // End of public static path
 

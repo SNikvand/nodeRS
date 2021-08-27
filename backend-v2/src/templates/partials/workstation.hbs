@@ -1,0 +1,55 @@
+<div class="main-container">
+    <div class="user-container user-container-last">
+        <div class="user-container-header">
+            <div class="user-container-header-label">
+                Edit Workstation
+            </div>
+        </div>
+        <div class="flex-row margin-1 flex-center">
+            <div class="container-600">
+                <form action="/workstations/{{workstation.workstationId}}" method="POST"
+                    class="form-workstation-edit" id="form-workstation-edit">
+                    <div class="flex-row">
+                        <div class="flex-column flex-center container-50p text-align-right text-size-md">
+                            <span>Workstation ID: </span>
+                        </div>
+                        <input type="text" class="textfield py-1 container-50p" value="{{workstation.workstationId}}" readonly>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-column flex-center container-50p text-align-right text-size-md">
+                            <span>Custom Name: </span>
+                        </div>
+                        <input type="text" class="textfield py-1 container-50p" name="prettyName" id="prettyName"
+                            placeholder="Custom Name" value="{{workstation.prettyName}}">
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-column flex-center container-50p text-align-right text-size-md">
+                            <span>Last IP: </span>
+                        </div>
+                        <input type="text" class="textfield py-1 container-50p" value="{{workstation.lastIp}}" readonly>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-column flex-center container-50p text-align-right text-size-md">
+                            <span>Last Location (Latitude,Longitude): </span>
+                        </div>
+                        <input type="text" class="container-50p textfield py-1 container-50p"
+                            value="{{workstation.location.latitude}},{{workstation.location.longitude}}" readonly>
+                    </div>
+                    <div class="flex-row">
+                        <div class="container-50p flex-column flex-center text-align-right text-size-md">
+                            <span>Encryption Key: </span>
+                        </div>
+                        <input type="text" class="container-50p textfield py-1" value="{{workstation.encryptionKey}}" readonly>
+                    </div>
+                    <div class="flex-row flex-center btn-wrapper">
+                        <a href="javascript:{}" onclick="document.getElementById('form-workstation-edit').submit();"
+                            class="btn btn-green">submit
+                        </a>
+                    </div>
+                    <input type="submit" hidden />
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

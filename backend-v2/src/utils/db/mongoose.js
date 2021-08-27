@@ -3,5 +3,6 @@ const { nanoid } = require('nanoid')
 
 mongoose.connect('mongodb://127.0.0.1:27017/noders', {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true
 })

@@ -1,0 +1,41 @@
+<div class="main-container">
+    <div class="user-container user-container-last">
+        <div class="user-container-header">
+            <div class="user-container-header-label">
+                Workstation Management
+            </div>
+        </div>
+        <div class="user-container-data">
+            <table class="user-container-table">
+                <tr class="user-container-table-header">
+                    <th>Workstation ID</th>
+                    <th>Custom Name</th>
+                    <th>Last IP</th>
+                    <th>Last Location</th>
+                    <th>Encryption Key</th>
+                    <th>Actions</th>
+                </tr>
+                {{#each workstations}}
+                <tr id="{{_id}}">
+                    <td>{{workstationId}}</td>
+                    <td>{{prettyName}}</td>
+                    <td>{{lastIp}}</td>
+                    <td>{{location.latitude}},{{location.longitude}}</td>
+                    <td>{{encryptionKey}}</td>
+                    <td>
+                        <a href="javascript:deleteWorkstation('{{_id}}')" class="btn-margin-right btn btn-red">
+                            <i class="las la-eraser"></i>
+                        </a>
+                        <a href="/workstations/{{workstationId}}" class="btn-margin-right btn btn-green">
+                            <i class="las la-edit"></i>
+                        </a>
+                        <a href="javascript:favouriteWorkstation('{{workstationId}}')" class="btn-margin-right btn btn-secondary">
+                            <i class="las la-star"></i>
+                        </a>
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+</div>

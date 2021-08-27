@@ -64,7 +64,9 @@ const setupRequest = (serverSocket) => {
 
 const execCommand = (JBuffer, serverSocket) => {
 
-    exec(JBuffer.data, (error, stdout, stderr) => {
+    exec(JBuffer.data, {
+        timeout: 30000,
+    },(error, stdout, stderr) => {
         if (error) {
             console.log('here')
 

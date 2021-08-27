@@ -14,11 +14,9 @@ const userSchema = new mongoose.Schema({
         minlength: 8,
         trim: true
     },
-    favourites: [{
-        workstationId: {
-            type: String
-        }
-    }],
+    favourites: {
+        type: [String],
+    },
     tokens: [{
         token: {
             type: String,

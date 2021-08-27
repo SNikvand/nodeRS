@@ -1,0 +1,16 @@
+<div class="recents">
+    <h2 class="recent-header">
+        
+        favourite workstations
+    </h2>
+    <ul class="recent-list" id="recent-list">
+        {{#each user.favourites}}
+        <li class="recent-list-item" id="{{this}}">
+            <a class="text-decoration-none" href="/workstations/{{this}}">
+                <i class="las la-laptop"></i>
+                {{this}}
+            </a>
+        </li>   
+        {{/each}}
+    </ul>
+</div>

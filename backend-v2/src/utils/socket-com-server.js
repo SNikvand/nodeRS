@@ -5,8 +5,7 @@ const geoip = require('geoip-lite')
 const Workstation = require('../utils/models/Workstation')
 const { io } = require('./web-server')
 
-
-var clients = {}
+const clients = {}
 const _EOT_ = '|||' // Characters to identify end of transmission per write (not per packet)
 
 const tlsOptions = {
@@ -30,7 +29,14 @@ const ioEmitNewConnect = (clientSocket) => {
     io.emit('workstation', {
         'id': clientSocket.workstationId, 
         'ip': clientSocket.ipv4Addr,
-        'll': clientSocket.location
+        'll': clientSocket.location,
+        'prettyName': clientSocket.prettyName
+    })
+}
+
+const ioEmitEndConnect = (clientSocket) => {
+    io.emit('removeWorkstationMarker', {
+        'id': clientSocket.workstationId
     })
 }
 
@@ -82,16 +88,20 @@ const existingClient = async (JBuffer, clientSocket) => {
     clientSocket.workstationId = JBuffer.id
     clientSocket.location = geoipLookup(clientSocket.ipv4Addr)
     clients[clientSocket.workstationId] = clientSocket
-    ioEmitNewConnect(clientSocket)
 
     try {
         const workstation = await Workstation.findOne({'workstationId': clientSocket.workstationId})
-
+        
         // Generate new ID for workstation if it doesn't exist in the DB
         if (!workstation) {
             return newClientSock(clientSocket)
         }
 
+        if (workstation.prettyName !== '' || workstation.prettyName != undefined) {
+            clientSocket.prettyName = workstation.prettyName
+        }
+
+        ioEmitNewConnect(clientSocket)
         workstation.lastIp = clientSocket.ipv4Addr
         workstation.location = geoipLookup(clientSocket.ipv4Addr)
         workstation.alive = true
@@ -137,10 +147,8 @@ const comSockServer = tls.createServer(tlsOptions, (clientSocket) => {
         if (endOfTransmissionIndex > 0 ) {
             clientSocket.comBuffer += dataString.substr(0, endOfTransmissionIndex)
             
-            console.log(dataString)
             try {
                 var JBuffer = JSON.parse(clientSocket.comBuffer)
-                console.log(JBuffer)
                 bufferInterpreter(JBuffer, clientSocket)
             } catch (e) {
                 console.log(e)
@@ -155,12 +163,14 @@ const comSockServer = tls.createServer(tlsOptions, (clientSocket) => {
     clientSocket.on('close', () => {
         console.log(`Client has disconnected ${clientSocket.workstationId}`)
         setWorkstationInactive(clientSocket.workstationId)
+        ioEmitEndConnect(clientSocket)
         delete clients[clientSocket.workstationId]
     })
 
     clientSocket.on('error', (error) => {
         console.log(`Client experienced an error ${clientSocket.workstationId}: ${error}`)
         setWorkstationInactive(clientSocket.workstationId)
+        ioEmitEndConnect(clientSocket)
         delete clients[clientSocket.workstationId]
     })
 })

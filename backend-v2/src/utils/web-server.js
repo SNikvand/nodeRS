@@ -29,6 +29,7 @@ const partialsPath = path.join(__dirname, '../templates/partials')
 // Express Routes
 const mainRouter = require('./routes/main-router')
 const userRouter = require('./routes/user-router')
+const workstationRouter = require('./routes/workstation-router')
 // End of Express Routes
 
 // Express and Socket.io setup
@@ -48,6 +49,7 @@ hbs.registerPartials(partialsPath)
 // Setup Express to use public static path
 app.use(express.static(publicDirectoryPath))
 app.use(cookieParser())
+app.use(workstationRouter)
 app.use(userRouter)
 app.use(mainRouter)
 // End of public static path

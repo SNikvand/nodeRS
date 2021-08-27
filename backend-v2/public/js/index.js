@@ -26,7 +26,7 @@ var lightMap = L.tileLayer('https://api.mapbox.com/styles/v1/snikvand/cksmsop030
 
 var map = L.map('map', {
     center: [0,0],//[49.217,-122.864],
-    zoom: 11,
+    zoom: 2,
     layers: [darkMap,lightMap],
     zoomControl: false
 });
@@ -34,10 +34,13 @@ var map = L.map('map', {
 var baseMaps = {
     "Dark": darkMap,
     "Light": lightMap
-    
 }
 
+var markerGroup = L.layerGroup().addTo(map)
+var markers = {}
+
 L.control.layers(baseMaps).addTo(map);
+
 
 // socket.on('hello', () => {
 //     console.log('Hello from server!')
@@ -86,10 +89,10 @@ function escapeHtml(unsafe) {
         .replace(/\s/g, "&nbsp;");
 }
 
-function selectWorkstationModal(workstationId) {
+function selectWorkstationModal(workstationId, prettyName) {
     modalCheckBox.checked = true;
-    shellModalHeaderLabel.innerHTML = `> ${workstationId}`;
-    shellModalHeaderLabel.setAttribute('href', `/clients/${workstationId}`);
+    shellModalHeaderLabel.innerHTML = `> ${(prettyName ? prettyName + ' - ' + workstationId : workstationId)}`;
+    shellModalHeaderLabel.setAttribute('href', `/workstations/${workstationId}`);
     shellModalExit.setAttribute('onclick', `exitWorkstationModal('${workstationId}')`)
     shellOutput.innerHTML = '';
     selectedWorkstation = workstationId;
@@ -121,21 +124,32 @@ function onLoad() {
 }
 
 socket.on('workstation', (data) => {
-    var marker = L.marker([data.ll.latitude,data.ll.longitude]).addTo(map);
-    marker.bindPopup(`<a href="javascript:{}" onclick="selectWorkstationModal('${data.id}')"><b>${data.id}</b></a><br>${data.ip}`)
+    markers[data.id] = L.marker([data.ll.latitude,data.ll.longitude]).addTo(markerGroup);
+    var popupHtml = '';
+    if (data.prettyName) {
+        popupHtml = `<a href="javascript:{}" onclick="selectWorkstationModal('${data.id}','${data.prettyName}')" class="map-marker-link"><b>${data.prettyName}</b></a><br>${data.id}<br>${data.ip}`
+    } else {
+        popupHtml = `<a href="javascript:{}" onclick="selectWorkstationModal('${data.id}')" class="map-marker-link"><b>${data.id}</b></a><br>${data.ip}`
+    }
+    markers[data.id].bindPopup(popupHtml)
     // console.log(data)
+})
+
+socket.on('removeWorkstationMarker', (data) => {
+    markerGroup.removeLayer(markers[data.id])
 })
 
 socket.on('execResponse', (data) => {
     var lines = data.split('\n')
-
     for (var i = 0; i < lines.length; i++) {
         lines[i] = escapeHtml(lines[i]) //.replace(/\s/g, '&nbsp;');
-        // shellOutput.scrollIntoView({ block: 'end', behavior: 'smooth' });
         shellOutput.innerHTML += `<code>${lines[i]}</code>\n`
         shellOutput.scrollTop = shellOutput.scrollHeight;
-        // shellOutput.scrollIntoView({ block: 'end', behavior: 'smooth' });
-
     }
 })
+
+socket.on('disconnect', () => {
+    markerGroup.clearLayers()
+})
+
 onLoad();

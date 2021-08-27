@@ -14,6 +14,7 @@ const auth = async (req, res, next) => {
 
         req.token = token
         req.user = user
+        res.locals.user = user
         next()
     } catch (e) {
         res.status(401).redirect('/users/login')

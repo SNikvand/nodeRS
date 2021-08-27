@@ -23,6 +23,56 @@ body {
     overflow: hidden;
 }
 
+.flex-row {
+    display: flex;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.flex-center {
+  justify-content: center;
+}
+
+.container-800 {
+  width: 800px;
+}
+
+.container-600 {
+  width: 600px;
+}
+.container-400 {
+  width: 400px;
+}
+.container-200 {
+  width: 200px;
+}
+.container-50p {
+  width: 50%
+}
+.container-100p {
+  width: 100%;
+}
+
+.margin-1 {
+  margin: 1rem;
+}
+
+.py-1 {
+  padding: 1rem 0 1rem 0;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-size-md {
+  font-size: 2rem;
+}
+.text-decoration-none {
+  text-decoration: none;
+  color:inherit;
+}
 /* scrollbar */
 /* Works on Firefox */
 * {

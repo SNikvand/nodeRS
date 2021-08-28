@@ -57,4 +57,5 @@ This is intended as a basic guide to use NodeRS
 # Random Notes
 Generating SSL key pair
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./host.key -out host.crt
+c:\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces
 ![color-pallet](https://user-images.githubusercontent.com/5490465/130366793-7ab4e05b-e3db-491b-85a8-164457079e80.png)

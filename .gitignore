@@ -1,4 +1,5 @@
 client-side/certs/
+client-side/.RSconf
 backend-v1/server-cert/
 backend-v1/node_modules/
 backend-v2/certs/

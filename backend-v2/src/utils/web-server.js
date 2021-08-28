@@ -14,7 +14,7 @@ const cookieParser = require('cookie-parser')
 // certificate options
 var key = fs.readFileSync(__dirname + '/../../certs/host.key')
 var cert = fs.readFileSync(__dirname + '/../../certs/host.crt')
-var options = {
+var tlsOptions = {
     key,
     cert
 }
@@ -34,7 +34,7 @@ const workstationRouter = require('./routes/workstation-router')
 
 // Express and Socket.io setup
 const app = express()
-const httpsServer = https.createServer(options, app)
+const httpsServer = https.createServer(tlsOptions, app)
 const io = socketio(httpsServer)
 app.use(express.urlencoded({extended: true}))
 // app.use(express.json())
@@ -56,5 +56,6 @@ app.use(mainRouter)
 
 module.exports = {
     httpsServer,
-    io
+    io,
+    tlsOptions
 }

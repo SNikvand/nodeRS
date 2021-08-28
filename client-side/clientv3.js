@@ -50,6 +50,7 @@ const sendClientConfig = (serverSocket) => {
 const setupConfig = (JBuffer) => {
     try {
         fs.writeFileSync(__dirname + _CONFIG_PATH_, JSON.stringify(JBuffer))
+        workstationId = JBuffer.id
     } catch (e) {
         console.log(`Error saving config: ${e}`)
     }

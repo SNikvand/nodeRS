@@ -1,18 +1,25 @@
+// NPM Modules
 const express = require('express')
 const dayjs = require('dayjs')
-const router = new express.Router()
+// ===========================================================================
+
+// Custom Modules
 const User = require('../models/User')
 const {auth, noAuth} = require('../middleware/auth')
+// ===========================================================================
 
+// Router Setup
+const router = new express.Router()
+// ===========================================================================
 
-// RENDER USERS PAGE WITH ALL USERS
+// on get /users router render users.hbs view with all users from database (using Auth middleware)
 router.get('/users', auth, async (req, res) => {
     var users = await User.find({}).select('username _id')
 
     res.render('users', { users })
 })
 
-// SAVE A NEW USER AND REDIRECT TO '/users' GET
+// on post /users save a new user (using auth middleware)
 router.post('/users', auth, async (req, res) => {
     
     const user = new User(req.body)
@@ -24,7 +31,7 @@ router.post('/users', auth, async (req, res) => {
     }
 })
 
-// DELETE A USER
+// on deete /users delete a user (using auth middleware)
 router.delete('/users', auth, async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.query.id)
@@ -35,15 +42,17 @@ router.delete('/users', auth, async (req, res) => {
 
         res.send(`${user.username} was remove from the database`)
     } catch (e) {
-        res.status(500).send()
+        console.log('User Delete Router: ' + e)
     }
 })
 
+// on get /users/login display login (noAuth middleware check to make sure user is not logged in)
 router.get('/users/login', noAuth, (req, res) => {
     res.render('login')
 })
 
-router.post('/users/login', async (req, res) => {
+// on post /users/login attempt to log in the user and create a token + add to cookie
+router.post('/users/login', noAuth, async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.username, req.body.password)
         const token = await user.generateAuthToken()
@@ -59,10 +68,11 @@ router.post('/users/login', async (req, res) => {
 
         res.redirect('/')
     } catch {
-        res.status(400).redirect('/users/login')
+        res.redirect('/users/login')
     }
 })
 
+// on post /users/logout remove token from their profile and clear cookie settings
 router.post('/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {

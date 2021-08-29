@@ -1,6 +1,12 @@
+// NPM modules
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+// ===========================================================================
+
+// Global Variables
+const _SECRET_ = 'nodersSecretToken'
+// ===========================================================================
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -25,9 +31,13 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+/**
+ * Generates an authentication token and stores it in the database
+ * @returns generated token
+ */
 userSchema.methods.generateAuthToken = async function () {
     const user = this
-    const token = jwt.sign({ _id: user._id.toString() }, 'nodersSecretToken', {
+    const token = jwt.sign({ _id: user._id.toString() }, _SECRET_, {
         expiresIn: '7d'
     })
 
@@ -37,6 +47,12 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
+/**
+ * Compares credidentials provided with entry in database
+ * @param {String} username 
+ * @param {String} password 
+ * @returns user profile
+ */
 userSchema.statics.findByCredentials = async (username, password) => {
     const user = await User.findOne({ username })
 

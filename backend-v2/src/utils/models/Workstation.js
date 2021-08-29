@@ -1,5 +1,7 @@
+// npm modules
 const mongoose = require('mongoose')
 const { nanoid } = require('nanoid')
+// ===========================================================================
 
 const workstationSchema = new mongoose.Schema({
     workstationId: {

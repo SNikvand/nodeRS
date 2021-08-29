@@ -175,7 +175,7 @@ const comServerConnect = (PORT, HOST, tlsCerts) => {
                 JBuffer = JSON.parse(buffer)
                 bufferInterpreter(JBuffer, serverSocket)
             } catch (e) {
-                console.log('Buffer was messed up... try again') //SEND MESSAGE TO SERVER
+                console.log(`Buffer Error ${e}`) //SEND MESSAGE TO SERVER
                 JBuffer = ''
                 buffer = ''
             }

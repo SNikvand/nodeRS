@@ -20,7 +20,7 @@ const sendExistingOpenSockets = async (ioSocket) => {
             'll': dbClients[key].location,
             'prettyName': dbClients[key].prettyName
         }
-        socket.emit('workstation', msg)
+        ioSocket.emit('workstation', msg)
     })
 }
 
@@ -56,6 +56,7 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('fileServerToClient', (data) => {
-        
+        // console.log(data)
+        sendFile(clients[data.workstationId], data.srcFilePath, data.dstFileName)
     })
 })

@@ -23,7 +23,7 @@ const endSendFileMsg = () => {
 
 const sendFile = async (clientSocket, srcFilePath, dstFileName) => {
     try {
-        var srcFileStream = fs.createReadStream(__dirname + srcFilePath)
+        var srcFileStream = fs.createReadStream(srcFilePath)
 
         srcFileStream.on('open', () => {
             // srcFileStream.pause()
@@ -33,13 +33,14 @@ const sendFile = async (clientSocket, srcFilePath, dstFileName) => {
         srcFileStream.on('readable', () => {
             var chunk;
             
-            while (null !== (chunk = readable.read())) {
+            while (null !== (chunk = srcFileStream.read(200))) {
                 var msg = {
                     type: 'fileData',
-                    data: chunk
+                    data: String(chunk)
                 }
-                
-                clientSocket.write(JSON.stringify(msg) + _EOT_)
+                console.log(chunk)
+                console.log(msg)
+                // clientSocket.write(JSON.stringify(msg) + _EOT_)
                 //chunk has data, do something with chunk
             }
         })

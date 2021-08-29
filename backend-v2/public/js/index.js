@@ -19,7 +19,7 @@ var lastShellTracker = 1
 var darkMap = L.tileLayer('https://api.mapbox.com/styles/v1/snikvand/cksmsnprv31ze17mtxsg8d059/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoic25pa3ZhbmQiLCJhIjoiY2tzbXNmNHo2MGpkdjJ2bXJiejljczc2ZSJ9.-8JS2uOe7BYjvYpTu-zp3g', {
     attribution: '',
     maxZoom: 18,
-    tileSize: 256,
+    tileSize: 512,
     zoomOffset: -1,
     accessToken: 'pk.eyJ1Ijoic25pa3ZhbmQiLCJhIjoiY2tzbXNqZDNpMGRwMTJvbWdtdXd4N3kxZSJ9.4HPcFhlynlFKFtuCjncvJw'
 })
@@ -28,7 +28,7 @@ var darkMap = L.tileLayer('https://api.mapbox.com/styles/v1/snikvand/cksmsnprv31
 var lightMap = L.tileLayer('https://api.mapbox.com/styles/v1/snikvand/cksmsop0306xk18nw96tnyoku/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoic25pa3ZhbmQiLCJhIjoiY2tzbXNmNHo2MGpkdjJ2bXJiejljczc2ZSJ9.-8JS2uOe7BYjvYpTu-zp3g', {
     attribution: '',
     maxZoom: 18,
-    tileSize: 256,
+    tileSize: 512,
     zoomOffset: -1,
     accessToken: 'pk.eyJ1Ijoic25pa3ZhbmQiLCJhIjoiY2tzbXNqZDNpMGRwMTJvbWdtdXd4N3kxZSJ9.4HPcFhlynlFKFtuCjncvJw'
 })
@@ -58,10 +58,26 @@ shellInput.addEventListener('keydown', (e) => {
 
     // If user presses enter, it will submit the message to server and add last input to stack to track
     if (e.key == 'Enter') {
-        socket.emit('execWorkstation', {
-            'workstationId': selectedWorkstation,
-            'cmd': shellInput.value
-        })
+        var shellTokens = shellInput.value.split(',')
+        switch (shellTokens[0]) {
+            case 'SEND':
+                socket.emit('fileServerToClient', {
+                    'workstationId': selectedWorkstation,
+                    'srcFilePath': shellTokens[1],
+                    'dstFileName': shellTokens[2]
+                })
+                break
+            case 'GET':
+                //do something
+                break
+            default:
+                socket.emit('execWorkstation', {
+                    'workstationId': selectedWorkstation,
+                    'cmd': shellInput.value
+                })
+                break
+        }
+                     
         lastShellInput.push(shellInput.value)
         lastShellTracker = 1
         shellOutput.innerHTML += `<p class="shell-meta-text"><b>${shellInput.value}</b></p>`

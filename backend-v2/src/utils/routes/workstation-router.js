@@ -28,7 +28,6 @@ router.post('/workstations/:id', auth, async (req, res) => {
         var workstation = await Workstation.findOne({workstationId})
         workstation.prettyName = req.body.prettyName
         await workstation.save()
-        // clients[workstationId].prettyName = req.body.prettyName
         res.redirect('/workstations')
     } catch (e) {
         console.log(e)  

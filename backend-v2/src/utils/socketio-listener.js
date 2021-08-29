@@ -1,6 +1,7 @@
 // Custom Modules
 const { io } = require('./web-server')
 const { clients } = require('./socket-com-server')
+const { sendFile, receiveFile } = require('./socket-file-server')
 const Workstation = require('./models/Workstation')
 // end of custom modules
 
@@ -52,5 +53,9 @@ io.on('connection', async (socket) => {
                 e
             })
         }
+    })
+
+    socket.on('fileServerToClient', (data) => {
+        
     })
 })

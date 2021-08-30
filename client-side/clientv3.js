@@ -1,8 +1,10 @@
 "use strict";
+// Core Modules
 const tls = require('tls')
 const fs = require('fs')
 const child = require('child_process')
 const { exec } = require('child_process');
+// ===========================================================================
 
 /**
  * options object stores the private key and public cert to be used by tls socket for traffic encryption.
@@ -29,6 +31,10 @@ var buffer = ''
 var fileStream = {}
 // ===========================================================================
 
+/**
+ * Read client config file if a configuration exists
+ * @param {String} configPath configuration file path
+ */
 const readConfig = (configPath) => {
     try {
         var configData = fs.readFileSync(__dirname + _CONFIG_PATH_)
@@ -39,6 +45,10 @@ const readConfig = (configPath) => {
     }
 }
 
+/**
+ * send client config settings to the server
+ * @param {Socket} serverSocket server Socket object
+ */
 const sendClientConfig = (serverSocket) => {
     var msg = {
         'type': 'existingClient',
@@ -47,6 +57,10 @@ const sendClientConfig = (serverSocket) => {
     serverSocket.write(JSON.stringify(msg) + _EOT_)
 }
 
+/**
+ * write configuration settings provided by the server to the client into a file
+ * @param {JSON} JBuffer json object containing data to configurate the client
+ */
 const setupConfig = (JBuffer) => {
     try {
         fs.writeFileSync(__dirname + _CONFIG_PATH_, JSON.stringify(JBuffer))
@@ -56,6 +70,10 @@ const setupConfig = (JBuffer) => {
     }
 }
 
+/**
+ * Client requests server for setup procedure (Triggered if client did not find configuration settings)
+ * @param {Socket} serverSocket server socket object
+ */
 const setupRequest = (serverSocket) => {
     var msg = {
         'type': 'setupRequest'
@@ -63,6 +81,11 @@ const setupRequest = (serverSocket) => {
     serverSocket.write(JSON.stringify(msg) + _EOT_)
 }
 
+/**
+ * Attempt to execute a command from server on the client and transmit stdout to server
+ * @param {JSON} JBuffer JSON object containg command to run on client
+ * @param {Socket} serverSocket server Socket Object
+ */
 const execCommand = (JBuffer, serverSocket) => {
 
     exec(JBuffer.data, {
@@ -87,28 +110,47 @@ const execCommand = (JBuffer, serverSocket) => {
     })
 }
 
-const echoTest = (JBuffer, serverSocket) => {
-    var msg = {
-        'type': 'echo',
-        'data': JBuffer.data
-    }
-    serverSocket.write(JSON.stringify(msg) + _EOT_)
-}
+/**
+ * Echo for testing purposes
+ * @param {JSON} JBuffer 
+ */
+// const echoTest = (JBuffer, serverSocket) => {
+//     var msg = {
+//         'type': 'echo',
+//         'data': JBuffer.data
+//     }
+//     serverSocket.write(JSON.stringify(msg) + _EOT_)
+// }
 
+/**
+ * Creates a write filestream for the client
+ * @param {JSON} JBuffer contains filename data
+ */
 const initWriteFile = (JBuffer) => {
     console.log(`Writing File ${JBuffer.data}`)
     fileStream = fs.createWriteStream(JBuffer.data)
 }
 
+/**
+ * writes data received from server to file on client
+ * @param {JSON} JBuffer contains file buffer data
+ */
 const dataWriteFile = (JBuffer) => {
     fileStream.write(Uint8Array.from(JBuffer.data.data))
 }
 
+/**
+ * Closes file write stream after file writes are complete
+ */
 const endWriteFile = () => {
     console.log(`finished writing file`)
     fileStream.close()
 }
 
+/**
+ * creates a formatted string JSON message to notify server that file sending is complete
+ * @returns string JSON object
+ */
 const endSendFileMsg = () => {
     var msg = {
         type: 'endOfFile'
@@ -116,6 +158,11 @@ const endSendFileMsg = () => {
     return JSON.stringify(msg)
 }
 
+/**
+ * Opens a read stream and begins transmitting the read buffer to server
+ * @param {JSON} JBuffer contains file path to read from
+ * @param {Socket} serverSocket server Socket Object
+ */
 const sendFile = (JBuffer, serverSocket) => {
     if (fs.existsSync(JBuffer.data)) {
         try {
@@ -152,6 +199,12 @@ const sendFile = (JBuffer, serverSocket) => {
     }
 }
 
+/**
+ * The purpose of this function is to trigger specialized functions based on type of message received
+ * from the server.
+ * @param {JSON} JBuffer contains the type of message and data related to type
+ * @param {Socket} serverSocket server Socket Object
+ */
 const bufferInterpreter = (JBuffer, serverSocket) => {
     switch (JBuffer.type) {
         case 'setup':
@@ -211,6 +264,7 @@ const comServerConnect = (PORT, HOST, tlsCerts) => {
         // shellSpawn(client)
     })
 
+    // Read socket stream from server to client and attempt to interpret the message
     serverSocket.on('data', (data) => {
         var dataString = data.toString()
         buffer += dataString

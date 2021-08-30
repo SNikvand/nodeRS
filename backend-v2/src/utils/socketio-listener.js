@@ -59,6 +59,7 @@ io.on('connection', async (socket) => {
         }
     })
 
+    // when frontend admin emits "fileServerToClient" trigger the function to start sending file to net socket client
     socket.on('fileServerToClient', (data) => {
         // console.log(data)
         sendFile(clients[data.workstationId], data.srcFilePath, data.dstFileName, (response) => {
@@ -66,6 +67,11 @@ io.on('connection', async (socket) => {
         })
     })
 
+    /**
+     * when frontend admin emits "fileClientToServer" create a write stream and attach to the netsocket object
+     * Note: the reason for this approach, I dont want to give the ability to the client to trigger creating a fileStream.
+     * this could be dangerous if someone reverse engineers the client to transmit files back and compromise the server.
+     */
     socket.on('fileClientToServer', (data) => {
         var dir = `./downloads/${data.workstationId}`
         try {

@@ -1,7 +1,16 @@
+// Core Modules
 const fs = require('fs')
+// ===========================================================================
 
+// Global Variables
 const _EOT_ = '|||'
+// ===========================================================================
 
+/**
+ * Creates formatted message for client to initiate sending files from Server to Client
+ * @param {String} filename name of file to transmit to client
+ * @returns string JSON object
+ */
 const initSendFileMsg = (filename) => {
     var msg = {
         type: 'fileServerToClient',
@@ -10,6 +19,10 @@ const initSendFileMsg = (filename) => {
     return JSON.stringify(msg)
 }
 
+/**
+ * Creates a formatted message to notify client that file transfer is complete
+ * @returns string JSON object
+ */
 const endSendFileMsg = () => {
     var msg = {
         type: 'endOfFile'
@@ -17,6 +30,13 @@ const endSendFileMsg = () => {
     return JSON.stringify(msg)
 }
 
+/**
+ * Main function to read a file and transmit the data from server to client
+ * @param {Socket} clientSocket client socket object
+ * @param {String} srcFilePath source file to be sent to client
+ * @param {String} dstFileName name of file for client to store in ./
+ * @param {Function} cb callback function
+ */
 const sendFile = async (clientSocket, srcFilePath, dstFileName, cb) => {
     if (fs.existsSync(srcFilePath)) {
         try {

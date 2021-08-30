@@ -68,7 +68,11 @@ shellInput.addEventListener('keydown', (e) => {
                 })
                 break
             case 'GET':
-                //do something
+                socket.emit('fileClientToServer', {
+                    'workstationId': selectedWorkstation,
+                    'clientFilePath': shellTokens[1],
+                    'serverFileName': shellTokens[2]
+                })
                 break
             default:
                 socket.emit('execWorkstation', {

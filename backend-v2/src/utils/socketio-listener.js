@@ -1,7 +1,11 @@
+// Core Modules
+const fs = require('fs')
+// end of Core Modules
+
 // Custom Modules
 const { io } = require('./web-server')
-const { clients } = require('./socket-com-server')
-const { sendFile, receiveFile } = require('./socket-file-server')
+const { clients, _EOT_ } = require('./socket-com-server')
+const { sendFile } = require('./socket-file-sender')
 const Workstation = require('./models/Workstation')
 // end of custom modules
 
@@ -47,7 +51,7 @@ io.on('connection', async (socket) => {
             'data': data.cmd
         }
         try {
-            clients[data.workstationId].write(JSON.stringify(msg) + '|||')
+            clients[data.workstationId].write(JSON.stringify(msg) + _EOT_)
         } catch (e) {
             socket.emit('test', {
                 e
@@ -60,5 +64,24 @@ io.on('connection', async (socket) => {
         sendFile(clients[data.workstationId], data.srcFilePath, data.dstFileName, (response) => {
             socket.emit('execResponse', response)
         })
+    })
+
+    socket.on('fileClientToServer', (data) => {
+        var dir = `./downloads/${data.workstationId}`
+        try {
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true })
+            }
+            clients[data.workstationId].fileWriteStream = fs.createWriteStream(dir + `/${data.serverFileName}`)
+
+            var msg = {
+                'type': 'fileClientToServer',
+                'data': data.clientFilePath
+            }
+            clients[data.workstationId].write(JSON.stringify(msg) + _EOT_)
+
+        } catch (e) {
+            socket.emit('execResponse', e)
+        }
     })
 })

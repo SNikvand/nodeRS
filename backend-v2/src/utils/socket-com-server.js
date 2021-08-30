@@ -154,6 +154,15 @@ const existingClient = async (JBuffer, clientSocket) => {
     }
 }
 
+const dataWriteFile = (JBuffer, clientSocket) => {
+    clientSocket.fileWriteStream.write(Uint8Array.from(JBuffer.data.data))
+}
+
+const endWriteFile = (clientSocket) => {
+    console.log(`finished writing file`)
+    io.to(clientSocket.workstationId).emit('execResponse', `Download Complete. File saved under ./downloads/${clientSocket.workstationId}/`)
+    clientSocket.fileWriteStream.close()
+}
 
 /**
  * purpose of this function is to take the JSON buffer data recieved from the client
@@ -171,6 +180,12 @@ const bufferInterpreter = (JBuffer, clientSocket) => {
             break
         case 'existingClient':
             existingClient(JBuffer, clientSocket)
+            break
+        case 'fileData':
+            dataWriteFile(JBuffer, clientSocket)
+            break
+        case 'endOfFile':
+            endWriteFile(clientSocket)
             break
     }
 }
@@ -224,5 +239,6 @@ const comSockServer = tls.createServer(tlsOptions, (clientSocket) => {
 
 module.exports = {
     comSockServer,
-    clients
+    clients,
+    _EOT_
 }

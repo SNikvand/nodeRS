@@ -104,9 +104,52 @@ const dataWriteFile = (JBuffer) => {
     fileStream.write(Uint8Array.from(JBuffer.data.data))
 }
 
-const endWriteFile = (serverSocket) => {
+const endWriteFile = () => {
     console.log(`finished writing file`)
     fileStream.close()
+}
+
+const endSendFileMsg = () => {
+    var msg = {
+        type: 'endOfFile'
+    }
+    return JSON.stringify(msg)
+}
+
+const sendFile = (JBuffer, serverSocket) => {
+    if (fs.existsSync(JBuffer.data)) {
+        try {
+        
+            var srcFileStream = fs.createReadStream(JBuffer.data)
+    
+            srcFileStream.on('open', () => {
+                // serverSocket.write(initSendFileMsg(dstFileName) + _EOT_)
+            })
+    
+            srcFileStream.on('readable', () => {
+                var chunk;
+                
+                while (null !== (chunk = srcFileStream.read())) {
+                    var msg = {
+                        type: 'fileData',
+                        data: chunk
+                    }
+    
+                    serverSocket.write(JSON.stringify(msg) + _EOT_)
+                }
+            })
+    
+            srcFileStream.on('error', (e) => {
+                serverSocket.write(endSendFileMsg() + _EOT_)
+            })
+    
+            srcFileStream.on('end', () => {
+                serverSocket.write(endSendFileMsg() + _EOT_)
+            })
+        } catch (e) {
+            console.log(`Error in socket-file-server: ${e}`)
+        }
+    }
 }
 
 const bufferInterpreter = (JBuffer, serverSocket) => {
@@ -122,6 +165,9 @@ const bufferInterpreter = (JBuffer, serverSocket) => {
             break
         case 'fileServerToClient':
             initWriteFile(JBuffer)
+            break
+        case 'fileClientToServer':
+            sendFile(JBuffer, serverSocket)
             break
         case 'fileData':
             dataWriteFile(JBuffer)

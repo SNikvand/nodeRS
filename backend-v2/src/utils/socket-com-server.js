@@ -154,10 +154,19 @@ const existingClient = async (JBuffer, clientSocket) => {
     }
 }
 
+/**
+ * data received from the client will be written to a file
+ * @param {JSON} JBuffer contains data recieved from the client
+ * @param {Socket} clientSocket net socket object of the client
+ */
 const dataWriteFile = (JBuffer, clientSocket) => {
     clientSocket.fileWriteStream.write(Uint8Array.from(JBuffer.data.data))
 }
 
+/**
+ * Client notifies the server that file is finished transmitting. server closes the write stream and notifies frontend.
+ * @param {Socket} clientSocket net socket object of the client
+ */
 const endWriteFile = (clientSocket) => {
     console.log(`finished writing file`)
     io.to(clientSocket.workstationId).emit('execResponse', `Download Complete. File saved under ./downloads/${clientSocket.workstationId}/`)

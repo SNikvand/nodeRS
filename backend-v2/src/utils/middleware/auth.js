@@ -1,10 +1,15 @@
+// Npm modules
 const jwt = require('jsonwebtoken')
-const User = require('../models/User')
+// ===========================================================================
 
+// Custom Modules
+const User = require('../models/User')
+// ===========================================================================
+
+// Validates is the use is properly authenticated with a token
 const auth = async (req, res, next) => {
     try {
         const token = JSON.parse(req.cookies['nodeRS-cookie']).Authorization
-        // const token = req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, 'nodersSecretToken')
         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
 
@@ -21,6 +26,7 @@ const auth = async (req, res, next) => {
     }
 }
 
+// Verifies to make sure that the user is not logged in or authenticated
 const noAuth = async (req, res, next) => {
     try {
         const token = JSON.parse(req.cookies['nodeRS-cookie']).Authorization

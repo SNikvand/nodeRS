@@ -1,6 +1,11 @@
+// Core Modules
+const fs = require('fs')
+// end of Core Modules
+
 // Custom Modules
 const { io } = require('./web-server')
-const { clients } = require('./socket-com-server')
+const { clients, _EOT_ } = require('./socket-com-server')
+const { sendFile } = require('./socket-file-sender')
 const Workstation = require('./models/Workstation')
 // end of custom modules
 
@@ -19,7 +24,7 @@ const sendExistingOpenSockets = async (ioSocket) => {
             'll': dbClients[key].location,
             'prettyName': dbClients[key].prettyName
         }
-        socket.emit('workstation', msg)
+        ioSocket.emit('workstation', msg)
     })
 }
 
@@ -46,11 +51,37 @@ io.on('connection', async (socket) => {
             'data': data.cmd
         }
         try {
-            clients[data.workstationId].write(JSON.stringify(msg) + '|||')
+            clients[data.workstationId].write(JSON.stringify(msg) + _EOT_)
         } catch (e) {
             socket.emit('test', {
                 e
             })
+        }
+    })
+
+    socket.on('fileServerToClient', (data) => {
+        // console.log(data)
+        sendFile(clients[data.workstationId], data.srcFilePath, data.dstFileName, (response) => {
+            socket.emit('execResponse', response)
+        })
+    })
+
+    socket.on('fileClientToServer', (data) => {
+        var dir = `./downloads/${data.workstationId}`
+        try {
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true })
+            }
+            clients[data.workstationId].fileWriteStream = fs.createWriteStream(dir + `/${data.serverFileName}`)
+
+            var msg = {
+                'type': 'fileClientToServer',
+                'data': data.clientFilePath
+            }
+            clients[data.workstationId].write(JSON.stringify(msg) + _EOT_)
+
+        } catch (e) {
+            socket.emit('execResponse', e)
         }
     })
 })

@@ -23,10 +23,10 @@ const _CONFIG_PATH_ = '/.RSconf'
 // ===========================================================================
 
 // Global variables
-let fsClient = {}
-let comAlive = false
-let workstationId
-let buffer = ''
+var comAlive = false
+var workstationId
+var buffer = ''
+var fileStream = {}
 // ===========================================================================
 
 const readConfig = (configPath) => {
@@ -95,6 +95,63 @@ const echoTest = (JBuffer, serverSocket) => {
     serverSocket.write(JSON.stringify(msg) + _EOT_)
 }
 
+const initWriteFile = (JBuffer) => {
+    console.log(`Writing File ${JBuffer.data}`)
+    fileStream = fs.createWriteStream(JBuffer.data)
+}
+
+const dataWriteFile = (JBuffer) => {
+    fileStream.write(Uint8Array.from(JBuffer.data.data))
+}
+
+const endWriteFile = () => {
+    console.log(`finished writing file`)
+    fileStream.close()
+}
+
+const endSendFileMsg = () => {
+    var msg = {
+        type: 'endOfFile'
+    }
+    return JSON.stringify(msg)
+}
+
+const sendFile = (JBuffer, serverSocket) => {
+    if (fs.existsSync(JBuffer.data)) {
+        try {
+        
+            var srcFileStream = fs.createReadStream(JBuffer.data)
+    
+            srcFileStream.on('open', () => {
+                // serverSocket.write(initSendFileMsg(dstFileName) + _EOT_)
+            })
+    
+            srcFileStream.on('readable', () => {
+                var chunk;
+                
+                while (null !== (chunk = srcFileStream.read())) {
+                    var msg = {
+                        type: 'fileData',
+                        data: chunk
+                    }
+    
+                    serverSocket.write(JSON.stringify(msg) + _EOT_)
+                }
+            })
+    
+            srcFileStream.on('error', (e) => {
+                serverSocket.write(endSendFileMsg() + _EOT_)
+            })
+    
+            srcFileStream.on('end', () => {
+                serverSocket.write(endSendFileMsg() + _EOT_)
+            })
+        } catch (e) {
+            console.log(`Error in socket-file-server: ${e}`)
+        }
+    }
+}
+
 const bufferInterpreter = (JBuffer, serverSocket) => {
     switch (JBuffer.type) {
         case 'setup':
@@ -106,6 +163,18 @@ const bufferInterpreter = (JBuffer, serverSocket) => {
         case 'exec':
             execCommand(JBuffer, serverSocket)
             break
+        case 'fileServerToClient':
+            initWriteFile(JBuffer)
+            break
+        case 'fileClientToServer':
+            sendFile(JBuffer, serverSocket)
+            break
+        case 'fileData':
+            dataWriteFile(JBuffer)
+            break
+        case 'endOfFile':
+            endWriteFile(serverSocket)
+            break;
     }
 }
 
@@ -113,53 +182,6 @@ const bufferInterpreter = (JBuffer, serverSocket) => {
 const asyncCall = (callback) => new Promise((resolve) => {
     callback(resolve)
 })
-
-/**
- * establishes connection to a file socket server using information below.
- * Connection will be persistant and be reattempted every 1000ms on disconnect
- * @param {number} PORT 
- * @param {string} HOST 
- * @param {object} tlsCerts 
- * @param {socket} comClient 
- * @param {function} cb 
- * @returns socket
- */
-const fsServerConnect = (PORT, HOST, tlsCerts, comClient, cb) => {
-    const client = tls.connect(PORT, HOST, tlsCerts)
-
-    // Connection is established to server
-    client.on('secure', () => {
-        console.log(`Connected to port ${PORT}`)
-        if (cb) {
-            cb(client)
-        }
-
-        // If the communication socket is alive and connection ID has been assigned, resync it (important for filesockets)
-        if (comAlive && connID) {
-            console.log(connID)
-            client.write('_+4' + connID)
-        }
-    })
-
-    // if the file socket dropped, attempt to reconnect
-    client.on('close', () => {
-        console.log(`${PORT} connection closed... reconnecting...`)
-        client.destroy()
-        if (comAlive == true) {
-            setTimeout(() => {
-                fsClient = fsServerConnect(PORT, HOST, tlsCerts, cb)
-            }, 1000)
-        }
-    })
-
-    // if the socket throws an error, destroy the socket, and attempt to reconnect with new socket
-    client.on('error', (error) => {
-        console.log(error)
-        client.destroy()
-    })
-
-    return client
-}
 
 /**
  * creates a connection to a communication socket server.
@@ -191,25 +213,22 @@ const comServerConnect = (PORT, HOST, tlsCerts) => {
 
     serverSocket.on('data', (data) => {
         var dataString = data.toString()
-        var endOfTransmissionIndex = dataString.indexOf('|||')
-        if (endOfTransmissionIndex > 0) {
-            buffer += dataString.substr(0, endOfTransmissionIndex)
+        buffer += dataString
+        var endOfTransmissionIndex = buffer.indexOf(_EOT_) // will return -1 if nothing found
 
-            console.log(buffer)
-            var JBuffer
+        while (endOfTransmissionIndex > 0) {
+            var tempBuffer = buffer.substr(0, endOfTransmissionIndex)
+            
             try {
-                JBuffer = JSON.parse(buffer)
+                var JBuffer = JSON.parse(tempBuffer)
                 bufferInterpreter(JBuffer, serverSocket)
             } catch (e) {
-                console.log('Buffer was messed up... try again') //SEND MESSAGE TO SERVER
-                JBuffer = ''
-                buffer = ''
+                console.log(`Buffer Error ${e}: ${tempBuffer}`)
             }
-            
-            buffer = ''
-        } else {
-            buffer += data
-        }
+
+            buffer = buffer.substr(endOfTransmissionIndex + 3)
+            endOfTransmissionIndex = buffer.indexOf(_EOT_)
+        }            
     })
 
     // On socket close, attempt to reconnect

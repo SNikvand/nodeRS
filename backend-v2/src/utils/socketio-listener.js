@@ -57,6 +57,8 @@ io.on('connection', async (socket) => {
 
     socket.on('fileServerToClient', (data) => {
         // console.log(data)
-        sendFile(clients[data.workstationId], data.srcFilePath, data.dstFileName)
+        sendFile(clients[data.workstationId], data.srcFilePath, data.dstFileName, (response) => {
+            socket.emit('execResponse', response)
+        })
     })
 })

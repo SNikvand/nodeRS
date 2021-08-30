@@ -96,14 +96,16 @@ const echoTest = (JBuffer, serverSocket) => {
 }
 
 const initWriteFile = (JBuffer) => {
+    console.log(`Writing File ${JBuffer.data}`)
     fileStream = fs.createWriteStream(JBuffer.data)
 }
 
 const dataWriteFile = (JBuffer) => {
-    fileStream.write(JBuffer.data)
+    fileStream.write(Uint8Array.from(JBuffer.data.data))
 }
 
-const endWriteFile = () => {
+const endWriteFile = (serverSocket) => {
+    console.log(`finished writing file`)
     fileStream.close()
 }
 
@@ -125,7 +127,7 @@ const bufferInterpreter = (JBuffer, serverSocket) => {
             dataWriteFile(JBuffer)
             break
         case 'endOfFile':
-            endWriteFile()
+            endWriteFile(serverSocket)
             break;
     }
 }
@@ -165,25 +167,22 @@ const comServerConnect = (PORT, HOST, tlsCerts) => {
 
     serverSocket.on('data', (data) => {
         var dataString = data.toString()
-        var endOfTransmissionIndex = dataString.indexOf('|||')
-        if (endOfTransmissionIndex > 0) {
-            buffer += dataString.substr(0, endOfTransmissionIndex)
+        buffer += dataString
+        var endOfTransmissionIndex = buffer.indexOf(_EOT_) // will return -1 if nothing found
 
-            console.log(buffer)
-            var JBuffer
+        while (endOfTransmissionIndex > 0) {
+            var tempBuffer = buffer.substr(0, endOfTransmissionIndex)
+            
             try {
-                JBuffer = JSON.parse(buffer)
+                var JBuffer = JSON.parse(tempBuffer)
                 bufferInterpreter(JBuffer, serverSocket)
             } catch (e) {
-                console.log(`Buffer Error ${e}`) //SEND MESSAGE TO SERVER
-                JBuffer = ''
-                buffer = ''
+                console.log(`Buffer Error ${e}: ${tempBuffer}`)
             }
-            
-            buffer = ''
-        } else {
-            buffer += data
-        }
+
+            buffer = buffer.substr(endOfTransmissionIndex + 3)
+            endOfTransmissionIndex = buffer.indexOf(_EOT_)
+        }            
     })
 
     // On socket close, attempt to reconnect

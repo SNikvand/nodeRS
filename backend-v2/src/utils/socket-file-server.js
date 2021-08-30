@@ -1,9 +1,28 @@
 const fs = require('fs')
 
 const _EOT_ = '|||'
+var fileStream = {}
 
-const receiveFile = async (clientSocket, destFilePath) => {
-    //Receive file to specific directory
+const initGetFileMsg = (filePath) => {
+    var msg = {
+        type: 'fileClientToServer',
+        data: filePath
+    }
+    return JSON.stringify(msg)
+}
+
+const receiveFile = async (clientSocket, clientFilePath, serverFileName) => {
+    try {
+        fileStream = fs.createWriteStream(__dirname + serverFileName)
+
+        fileStream.on('open', () => {
+            clientSocket.write(initGetFileMsg(clientFilePath))
+        })
+
+        return fileStream
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 const initSendFileMsg = (filename) => {
@@ -21,39 +40,39 @@ const endSendFileMsg = () => {
     return JSON.stringify(msg)
 }
 
-const sendFile = async (clientSocket, srcFilePath, dstFileName) => {
+const sendFile = async (clientSocket, srcFilePath, dstFileName, cb) => {
     try {
         var srcFileStream = fs.createReadStream(srcFilePath)
 
         srcFileStream.on('open', () => {
-            // srcFileStream.pause()
             clientSocket.write(initSendFileMsg(dstFileName) + _EOT_)
         })
 
         srcFileStream.on('readable', () => {
             var chunk;
             
-            while (null !== (chunk = srcFileStream.read(200))) {
+            while (null !== (chunk = srcFileStream.read())) {
                 var msg = {
                     type: 'fileData',
-                    data: String(chunk)
+                    data: chunk
                 }
-                console.log(chunk)
-                console.log(msg)
-                // clientSocket.write(JSON.stringify(msg) + _EOT_)
-                //chunk has data, do something with chunk
+
+                clientSocket.write(JSON.stringify(msg) + _EOT_)
             }
         })
 
-        srcFileStream.on('error', () => {
-            clientSocket.write(initSendFileMsg + _EOT_)
+        srcFileStream.on('error', (e) => {
+            clientSocket.write(endSendFileMsg() + _EOT_)
+            cb(e)
         })
 
         srcFileStream.on('end', () => {
-            clientSocket.write(endSendFileMsg + _EOT_)
+            clientSocket.write(endSendFileMsg() + _EOT_)
+            cb('File is sent.')
         })
     } catch (e) {
         console.log(`Error in socket-file-server: ${e}`)
+        cb(e)
     }
 }
 

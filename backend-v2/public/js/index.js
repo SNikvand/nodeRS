@@ -170,7 +170,6 @@ socket.on('workstation', (data) => {
         popupHtml = `<a href="javascript:{}" onclick="selectWorkstationModal('${data.id}')" class="map-marker-link"><b>${data.id}</b></a><br>${data.ip}`
     }
     markers[data.id].bindPopup(popupHtml)
-    // console.log(data)
 })
 
 // this event is received from the server to remove a map marker
@@ -187,6 +186,10 @@ socket.on('execResponse', (data) => {
         shellOutput.scrollTop = shellOutput.scrollHeight;
     }
 })
+
+// socket.on('shellPrintMsg', (data) => {
+//     shellOutput.innerHTML += `<code>${data}</code>\n`
+// })
 
 // Clear all markers from the map if the front end socket or the back end socket disconnects
 socket.on('disconnect', () => {

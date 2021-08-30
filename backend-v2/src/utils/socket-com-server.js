@@ -154,6 +154,7 @@ const existingClient = async (JBuffer, clientSocket) => {
     }
 }
 
+
 /**
  * purpose of this function is to take the JSON buffer data recieved from the client
  * and interpret what function  to run.
@@ -171,9 +172,6 @@ const bufferInterpreter = (JBuffer, clientSocket) => {
         case 'existingClient':
             existingClient(JBuffer, clientSocket)
             break
-        case 'echo':
-            // execResponse(JBuffer, clientSocket)
-            break
     }
 }
 
@@ -189,21 +187,22 @@ const comSockServer = tls.createServer(tlsOptions, (clientSocket) => {
     // when the server recieves data from the client send buffer to the BufferInterpreter function
     clientSocket.on('data', (data) => {
         var dataString = data.toString()
-        var endOfTransmissionIndex = dataString.indexOf(_EOT_) // will return -1 if nothing found
-        if (endOfTransmissionIndex > 0 ) {
-            clientSocket.comBuffer += dataString.substr(0, endOfTransmissionIndex)
+        clientSocket.comBuffer += dataString
+        var endOfTransmissionIndex = clientSocket.comBuffer.indexOf(_EOT_) // will return -1 if nothing found
+
+        while (endOfTransmissionIndex > 0) {
+            var tempBuffer = clientSocket.comBuffer.substr(0, endOfTransmissionIndex)
             
             try {
-                var JBuffer = JSON.parse(clientSocket.comBuffer)
+                var JBuffer = JSON.parse(tempBuffer)
                 bufferInterpreter(JBuffer, clientSocket)
             } catch (e) {
-                console.log(e)
+                console.log(`Buffer Error ${e}: ${tempBuffer}`)
             }
 
-            clientSocket.comBuffer = ''
-        } else {
-            clientSocket.comBuffer += data
-        }
+            clientSocket.comBuffer = clientSocket.comBuffer.substr(endOfTransmissionIndex + 3)
+            endOfTransmissionIndex = clientSocket.comBuffer.indexOf(_EOT_)
+        }   
     })
 
     // When server recieves close function from client handle closeout procedure

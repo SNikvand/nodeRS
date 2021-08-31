@@ -16,14 +16,14 @@
                     <th>Actions</th>
                 </tr>
                 {{#each workstations}}
-                <tr id="{{_id}}">
+                <tr id="entry-{{workstationId}}">
                     <td>{{workstationId}}</td>
                     <td>{{prettyName}}</td>
                     <td>{{lastIp}}</td>
                     <td>{{location.latitude}},{{location.longitude}}</td>
                     <td>{{encryptionKey}}</td>
                     <td>
-                        <a href="javascript:deleteWorkstation('{{_id}}')" class="btn-margin-right btn btn-red">
+                        <a href="javascript:deleteWorkstation('{{workstationId}}')" class="btn-margin-right btn btn-red">
                             <i class="las la-eraser"></i>
                         </a>
                         <a href="/workstations/{{workstationId}}" class="btn-margin-right btn btn-green">

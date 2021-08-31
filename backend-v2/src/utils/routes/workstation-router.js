@@ -49,4 +49,14 @@ router.post('/workstations/fave/:id', auth, async (req, res) => {
     }
 })
 
+router.delete('/workstations/:id', auth, async (req, res) => {
+    const workstationId = req.params.id
+    try {
+        await Workstation.findOneAndDelete({workstationId})
+        res.redirect('/workstations')
+    } catch (e) {
+        console.log(e)  
+    }
+})
+
 module.exports = router

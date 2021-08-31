@@ -19,6 +19,9 @@ function favouriteWorkstation(id) {
                                         <i class="las la-laptop"></i>
                                         ${id}
                                     </a>
+                                    <a class="float-right margin-right-2 text-decoration-none text-color-red" href="javascript:favouriteWorkstation('${id}')">
+                                        <i class="las la-trash"></i>
+                                    </a>
                                 </li>`
     } else {
         faveItem.remove()
@@ -26,4 +29,11 @@ function favouriteWorkstation(id) {
     return fetch('https://localhost:8443/workstations/fave/' + id, {
         method: 'POST',
     })
+}
+
+function deleteWorkstation(workstationId) {
+    var deleteItem = document.getElementById('entry-'+workstationId)
+    fetch('https://localhost:8443/workstations/' + workstationId, {
+        method: 'DELETE',
+    }).then(deleteItem.remove())
 }

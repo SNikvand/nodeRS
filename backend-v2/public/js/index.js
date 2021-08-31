@@ -164,6 +164,16 @@ function onLoad() {
     modalCheckBox.checked = false;
 }
 
+function favouriteWorkstation(id) {
+    var faveItem = document.getElementById(id)
+    faveItem.remove()
+    
+    return fetch('https://localhost:8443/workstations/fave/' + id, {
+        method: 'POST',
+    })
+}
+
+
 // this event is received from the server to add a new map marker
 socket.on('workstation', (data) => {
     markers[data.id] = L.marker([data.ll.latitude,data.ll.longitude]).addTo(markerGroup);

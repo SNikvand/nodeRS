@@ -55,6 +55,11 @@ router.get('/users/login', noAuth, (req, res) => {
 router.post('/users/login', noAuth, async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.username, req.body.password)
+        
+        if (!user) {
+            throw new Error('User Not Found')  
+        }
+
         const token = await user.generateAuthToken()
         const cookieData = {
             'Authorization': token

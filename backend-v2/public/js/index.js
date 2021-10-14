@@ -10,6 +10,7 @@ const shellModalHeaderLabel = document.getElementById("shell-modal-header-label"
 // ===========================================================================
 
 // Global Variables
+const endPointURL = 'https://vps-dd78ba21.vps.ovh.ca:8443'
 var selectedWorkstation = '';
 var lastShellInput = []
 var lastShellTracker = 1
@@ -163,6 +164,16 @@ function onLoad() {
     var modalCheckBox = document.getElementById("show-hide-shell");
     modalCheckBox.checked = false;
 }
+
+function favouriteWorkstation(id) {
+    var faveItem = document.getElementById(id)
+    faveItem.remove()
+
+    return fetch(`${endPointURL}/workstations/fave/` + id, {
+        method: 'POST',
+    })
+}
+
 
 // this event is received from the server to add a new map marker
 socket.on('workstation', (data) => {

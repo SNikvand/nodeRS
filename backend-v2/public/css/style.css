@@ -64,6 +64,14 @@ body {
   margin: 1rem;
 }
 
+.margin-right-2 {
+  margin-right: 2rem;
+}
+
+.float-right {
+  float: right;
+}
+
 .py-1 {
   padding: 1rem 0 1rem 0;
 }
@@ -79,6 +87,10 @@ body {
 .text-decoration-none {
   text-decoration: none;
   color: inherit;
+}
+
+.text-color-red {
+  color: red;
 }
 
 /* scrollbar */
@@ -212,7 +224,6 @@ body {
 }
 
 .recent-list-item:hover {
-  cursor: pointer;
   background-color: #D9D9D9;
 }
 

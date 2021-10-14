@@ -40,6 +40,7 @@ const endSendFileMsg = () => {
 const sendFile = async (clientSocket, srcFilePath, dstFileName, cb) => {
     if (fs.existsSync(srcFilePath)) {
         try {
+            console.log('Here')
             var srcFileStream = fs.createReadStream(srcFilePath)
     
             srcFileStream.on('open', () => {
@@ -72,6 +73,8 @@ const sendFile = async (clientSocket, srcFilePath, dstFileName, cb) => {
             console.log(`Error in socket-file-server: ${e}`)
             cb(e)
         }
+    } else {
+        cb(`File not found on server ${srcFilePath}`)
     }
 }
 

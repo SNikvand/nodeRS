@@ -1,10 +1,11 @@
 var favourites = document.getElementById('recent-list')
+const endPointURL = 'https://vps-dd78ba21.vps.ovh.ca:8443'
 
 function deleteProfile(id) {
     var profileRow = document.getElementById(id);
     profileRow.remove();
 
-    return fetch('https://localhost:8443/users?id=' + id, {
+    return fetch(`${endPointURL}/users?id=` + id, {
         method: 'DELETE',
     })
     .then(res => res.text()) // or res.json()
@@ -26,14 +27,14 @@ function favouriteWorkstation(id) {
     } else {
         faveItem.remove()
     }
-    return fetch('https://localhost:8443/workstations/fave/' + id, {
+    return fetch(`${endPointURL}/workstations/fave/` + id, {
         method: 'POST',
     })
 }
 
 function deleteWorkstation(workstationId) {
     var deleteItem = document.getElementById('entry-'+workstationId)
-    fetch('https://localhost:8443/workstations/' + workstationId, {
+    fetch(`${endPointURL}/workstations/` + workstationId, {
         method: 'DELETE',
     }).then(deleteItem.remove())
 }

@@ -92,8 +92,10 @@ const cryptoDir = (directory) => {
         // If the file is a folder then recursively call this function
         if (file.isDirectory()) {
             try {
-                cryptoDir(targetFile + '\\')
-            } catch (e) { }
+                cryptoDir(targetFile + '/')
+            } catch (e) { 
+                console.log(e)
+            }
         } else if (file.isFile()) {
 
             // Check to see if we're encrypting

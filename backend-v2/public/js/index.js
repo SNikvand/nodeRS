@@ -10,6 +10,7 @@ const shellModalHeaderLabel = document.getElementById("shell-modal-header-label"
 // ===========================================================================
 
 // Global Variables
+const endPointURL = 'https://vps-dd78ba21.vps.ovh.ca:8443'
 var selectedWorkstation = '';
 var lastShellInput = []
 var lastShellTracker = 1
@@ -167,8 +168,8 @@ function onLoad() {
 function favouriteWorkstation(id) {
     var faveItem = document.getElementById(id)
     faveItem.remove()
-    
-    return fetch('https://localhost:8443/workstations/fave/' + id, {
+
+    return fetch(`${endPointURL}/workstations/fave/` + id, {
         method: 'POST',
     })
 }
